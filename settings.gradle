@@ -1,0 +1,2 @@
+rootProject.name='My Timetable Test'
+include ':app'
