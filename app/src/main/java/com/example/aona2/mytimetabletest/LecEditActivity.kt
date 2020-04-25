@@ -9,28 +9,33 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_lec_edit.*
 import java.util.*
 
+//授業コマをタップすると呼び出される
+//授業をrealmに保存する
 class LecEditActivity : AppCompatActivity() {
     private lateinit var realm: Realm
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lec_edit)
 
+        //どのコマから遷移してきたかを取得
         val period = intent.getIntExtra("period", 0)
         val day = intent.getIntExtra("day", 0)
         val youbi = dayToYoubi(day)
 
+        //そのコマのrealmがあれば取得
         realm = Realm.getDefaultInstance()
         val lecture = realm.where<Lecture>().equalTo("youbi", youbi).equalTo("period", period).findFirst()
 
+        //TextViewを埋める
         val days_string = resources?.getStringArray(R.array.Days)
         if(days_string != null)
         whenText.setText(days_string[day].toString() + (period+1).toString() + "限")
         nameEdit.setText(lecture?.name)
 
+        //保存ボタン：realmに保存する
         saveBtn.setOnClickListener {
-            if(lecture == null){
+            if(lecture == null){ //そのコマのrealmがなければ作成
                 realm.executeTransaction {
                     val maxId = realm.where<Lecture>().max("id")
                     val nextId = (maxId?.toLong() ?: 0L) + 1L
@@ -39,7 +44,7 @@ class LecEditActivity : AppCompatActivity() {
                     lecture.period = period
                     lecture.name = nameEdit.text.toString()
                 }
-            }else{
+            }else{ //そのコマのrealmがあれば、nameを更新する
                 realm.executeTransaction{
                     lecture.name = nameEdit.text.toString()
                 }
@@ -48,6 +53,7 @@ class LecEditActivity : AppCompatActivity() {
             finish()
         }
 
+        //削除ボタン:そのコマのrealmが存在していれば削除する
         deleteBtn.setOnClickListener {
             realm.executeTransaction{
                 if(lecture != null)
@@ -58,6 +64,7 @@ class LecEditActivity : AppCompatActivity() {
         }
     }
 
+    //dayをyoubi(Calendar.DAYOFWEEK)に変換
     private fun dayToYoubi(day: Int): Int{
         if(day == 6) return 0
         else return day+ 1
