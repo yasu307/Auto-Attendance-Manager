@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">My Timetable Test</string>
+    <string name="name_text">名前</string>
+    <string name="delete_text">削除</string>
+    <string name="save_text">保存</string>
 </resources>

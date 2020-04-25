@@ -58,10 +58,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         //1行目:曜日の表示
-        val days = resources?.getStringArray(R.array.Days)
+        val days_string = resources?.getStringArray(R.array.Days)
         for(i in 0..4){
             daysText[i] = TextView(this)
-            if(days != null) daysText[i]?.text = days[i]
+            if(days_string != null) daysText[i]?.text = days_string[i]
             daysText[i]?.layoutParams = halfParams
             LinearArray[i+1]?.addView(daysText[i])
         }
@@ -76,8 +76,8 @@ class MainActivity : AppCompatActivity() {
                 //クリックの処理
                 lecText[j][i]?.setOnClickListener{
                     val intent = Intent(it.context, LecEditActivity::class.java)
-                    intent.putExtra("period", j.toString())
-                    intent.putExtra("day", i.toString())
+                    intent.putExtra("period", j)
+                    intent.putExtra("day", i)
                     startActivity(intent)
                 }
             }
