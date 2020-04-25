@@ -59,12 +59,14 @@ class MainActivity : AppCompatActivity() {
         //1列目：時限と時間の表示
         textView = TextView(this)
         textView?.setBackground(drawable)
+        textView?.setPadding(10,10,10,10)
         textView?.layoutParams = halfParams
         LinearArray[0]?.addView(textView)
         for(i in 0..5) {
             periodText[i] = TextView(this)
             val time = periodArray[i]
             periodText[i]?.text = (i+1).toString() + "限\n" + (time/100).toString() + "時\n" + (time%100).toString() + "分"
+            periodText[i]?.setPadding(10,10,10,10)
             periodText[i]?.layoutParams = params
             periodText[i]?.setBackground(drawable)
             LinearArray[0]?.addView(periodText[i])
@@ -75,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         for(i in 0..4){
             daysText[i] = TextView(this)
             if(days_string != null) daysText[i]?.text = days_string[i]
+            daysText[i]?.setPadding(10,10,10,10)
             daysText[i]?.layoutParams = halfParams
             daysText[i]?.setBackground(drawable)
             LinearArray[i+1]?.addView(daysText[i])
@@ -93,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                             "出席数:" + lecture?.attend.toString()
                 }
                 lecText[j][i]?.setBackground(drawable)
+                lecText[j][i]?.setPadding(10,10,10,10)
                 lecText[j][i]?.layoutParams = params
                 LinearArray[i+1]?.addView(lecText[j][i])
                 //クリックの処理
