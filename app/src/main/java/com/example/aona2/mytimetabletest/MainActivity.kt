@@ -1,6 +1,8 @@
 package com.example.aona2.mytimetabletest
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -38,6 +40,10 @@ class MainActivity : AppCompatActivity() {
         val linearHalfParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
         val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
 
+        //外枠の設定
+        val drawable = GradientDrawable()
+        drawable.setStroke(1, Color.BLACK)
+
         //LinearLayoutの設定
         LinearArray[0] = LinearLayout(this)
         LinearArray[0]?.orientation = LinearLayout.VERTICAL
@@ -52,6 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         //1列目：時限と時間の表示
         textView = TextView(this)
+        textView?.setBackground(drawable)
         textView?.layoutParams = halfParams
         LinearArray[0]?.addView(textView)
         for(i in 0..5) {
@@ -59,6 +66,7 @@ class MainActivity : AppCompatActivity() {
             val time = periodArray[i]
             periodText[i]?.text = (i+1).toString() + "限\n" + (time/100).toString() + "時\n" + (time%100).toString() + "分"
             periodText[i]?.layoutParams = params
+            periodText[i]?.setBackground(drawable)
             LinearArray[0]?.addView(periodText[i])
         }
 
@@ -68,6 +76,7 @@ class MainActivity : AppCompatActivity() {
             daysText[i] = TextView(this)
             if(days_string != null) daysText[i]?.text = days_string[i]
             daysText[i]?.layoutParams = halfParams
+            daysText[i]?.setBackground(drawable)
             LinearArray[i+1]?.addView(daysText[i])
         }
 
@@ -83,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                             "授業数:" + lecture?.lectureNum.toString() + "\n" +
                             "出席数:" + lecture?.attend.toString()
                 }
+                lecText[j][i]?.setBackground(drawable)
                 lecText[j][i]?.layoutParams = params
                 LinearArray[i+1]?.addView(lecText[j][i])
                 //クリックの処理
