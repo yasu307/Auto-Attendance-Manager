@@ -1,12 +1,13 @@
 package com.example.aona2.mytimetabletest
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import io.realm.Realm
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,11 +17,15 @@ class MainActivity : AppCompatActivity() {
     private var LinearArray: Array<LinearLayout?> = arrayOfNulls(6)
     var textView: TextView? = null
 
+    private lateinit var realm: Realm
+
     private val periodArray = arrayOf(900, 1040, 1300, 1440, 1615, 1800)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        realm = Realm.getDefaultInstance()
 
         setView()
     }
@@ -70,7 +75,14 @@ class MainActivity : AppCompatActivity() {
         for(i in 0..4){
             for(j in 0..5){
                 lecText[j][i] = TextView(this)
-                lecText[j][i]?.text = j.toString() + i.toString()
+                realm = Realm.getDefaultInstance()
+                val lecture = realm.where<Lecture>().equalTo("youbi", dayToYoubi(i))
+                    .equalTo("period", j).findFirst()
+                if(lecture != null) {
+                    lecText[j][i]?.text = lecture?.name + "\n" +
+                            "授業数:" + lecture?.lectureNum.toString() + "\n" +
+                            "出席数:" + lecture?.attend.toString()
+                }
                 lecText[j][i]?.layoutParams = params
                 LinearArray[i+1]?.addView(lecText[j][i])
                 //クリックの処理
@@ -82,5 +94,30 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun dayToYoubi(day: Int): Int{
+        if(day == 6) return 0
+        else return day+ 1
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        reload()
+    }
+
+    private fun reload(){
+        val intent = intent
+        overridePendingTransition(0, 0)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        finish()
+
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
     }
 }
