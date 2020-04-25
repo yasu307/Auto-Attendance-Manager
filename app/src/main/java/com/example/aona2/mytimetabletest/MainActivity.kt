@@ -1,9 +1,13 @@
 package com.example.aona2.mytimetabletest
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -11,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     val lecText = Array(6, { arrayOfNulls<TextView?>(5)})
@@ -30,6 +35,15 @@ class MainActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
 
         setView()
+
+        val myCalendar = MyCalendar(periodArray)
+        //myCalendar.periodArray = periodArray
+        val nextPair = myCalendar.nextTimeLec()
+        if(nextPair.first == null) Log.d("hoge", "hoge")
+        myCalendar.logCalendar(nextPair.first, "nextCal")
+
+        //setAlarm(nextPair.first, nextPair.second)
+        setAlarm(myCalendar.minAfter(2), 0)
     }
 
     private fun setView(){
@@ -111,12 +125,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun dayToYoubi(day: Int): Int{
-        if(day == 6) return 0
-        else return day+ 1
+        val youbi = day + 2
+        if(youbi == 8) return 1
+        else return youbi
     }
 
     override fun onRestart() {
         super.onRestart()
+
         reload()
     }
 
@@ -133,5 +149,30 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         realm.close()
+    }
+
+    //アラームをセットする
+    private fun setAlarm(calendar: Calendar?, index: Int){
+        if(calendar == null) return
+
+        var alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val notifyIntent = Intent(this, AttendActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        notifyIntent.putExtra("index", index)
+
+        val notifyPendingIntent = PendingIntent.getActivity(
+            this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmTimeMillis = calendar.timeInMillis
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(alarmTimeMillis, null), notifyPendingIntent)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTimeMillis, notifyPendingIntent)
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTimeMillis, notifyPendingIntent)
+        }
     }
 }

@@ -1,5 +1,9 @@
 package com.example.aona2.mytimetabletest
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -66,9 +70,12 @@ class LecEditActivity : AppCompatActivity() {
 
     //dayをyoubi(Calendar.DAYOFWEEK)に変換
     private fun dayToYoubi(day: Int): Int{
-        if(day == 6) return 0
-        else return day+ 1
+        val youbi = day + 2
+        if(youbi == 8) return 1
+        else return youbi
     }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
