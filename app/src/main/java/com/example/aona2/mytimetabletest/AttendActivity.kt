@@ -29,8 +29,10 @@ class AttendActivity : AppCompatActivity() {
 
     private var index = -1
 
-    private val periodNum = 5
-    private var periodArray = Array<Int>(periodNum + 1, {0})
+    //private val periodNum = 5
+    //private var periodArray = Array<Int>(periodNum + 1, {0})
+    private val periodArray = arrayOf(900, 1040, 1300, 1440, 1615, 1800)
+
 
     private var location: Pair<Double, Double> = Pair(0.0, 0.0)
 
