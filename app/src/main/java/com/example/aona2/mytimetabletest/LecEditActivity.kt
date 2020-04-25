@@ -69,4 +69,9 @@ class LecEditActivity : AppCompatActivity() {
         if(day == 6) return 0
         else return day+ 1
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
 }
