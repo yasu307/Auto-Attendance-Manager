@@ -8,9 +8,12 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.kotlin.where
@@ -26,7 +29,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var realm: Realm
 
-    private val periodArray = arrayOf(900, 1040, 1300, 1440, 1615, 1800)
+    private val periodArray = arrayOf(900, 1035, 1037, 1040, 1042, 1800)
+
+    private var isAlarm = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +47,10 @@ class MainActivity : AppCompatActivity() {
         if(nextPair.first == null) Log.d("hoge", "hoge")
         myCalendar.logCalendar(nextPair.first, "nextCal")
 
-        //setAlarm(nextPair.first, nextPair.second)
-        setAlarm(myCalendar.minAfter(2), 0)
+        if(isAlarm) {
+            setAlarm(nextPair.first, nextPair.second)
+            //setAlarm(myCalendar.minAfter(2), 0)
+        }
     }
 
     private fun setView(){
@@ -123,11 +130,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+/*
     private fun dayToYoubi(day: Int): Int{
         val youbi = day + 2
         if(youbi == 8) return 1
         else return youbi
+    }
+
+ */
+
+    private fun dayToYoubi(day: Int): Int{
+        return day + 1
     }
 
     override fun onRestart() {
@@ -174,5 +187,36 @@ class MainActivity : AppCompatActivity() {
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTimeMillis, notifyPendingIntent)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.setting, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.alarmMenu -> {
+                if(isAlarm){
+                    isAlarm = false
+                    Toast.makeText(applicationContext, "出席管理を解除しました", Toast.LENGTH_SHORT).show()
+                }else{
+                    isAlarm = true
+                    Toast.makeText(applicationContext, "出席管理を設定しました", Toast.LENGTH_SHORT).show()
+                }
+                return true
+            }
+            R.id.schoolLocationMenu -> {
+                val intent = Intent(this, SchoolLocationActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.periodMenu -> {
+                val intent = Intent(this, PeriodActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
