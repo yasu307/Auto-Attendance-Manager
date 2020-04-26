@@ -22,9 +22,9 @@ class Preference(pref: SharedPreferences) {
         val lng: Double = 139.697453
 
         editor.putInt("period1", 900)
-            .putInt("period2", 1040)
-            .putInt("period3", 2155)
-            .putInt("period4", 2157)
+            .putInt("period2", 1550)
+            .putInt("period3", 1552)
+            .putInt("period4", 1554)
             .putInt("period5", 2159)
             .putString("lat", lat.toString())
             .putString("lng", lng.toString())

@@ -32,12 +32,14 @@ class MainActivity : AppCompatActivity() {
 
     private var isAlarm = true
 
-    private val pref = PreferenceManager.getDefaultSharedPreferences(this)
-    private val preference = Preference(pref)
+    private lateinit var preference: Preference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        preference = Preference(pref)
 
         realm = Realm.getDefaultInstance()
         setView()

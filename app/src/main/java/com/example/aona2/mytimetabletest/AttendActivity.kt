@@ -21,8 +21,7 @@ import kotlinx.android.synthetic.main.activity_attend.*
 import java.util.*
 
 class AttendActivity : AppCompatActivity() {
-    private val pref = PreferenceManager.getDefaultSharedPreferences(this)
-    private val preference = Preference(pref)
+    private lateinit var preference: Preference
 
     private lateinit var realm: Realm
     private var realmResults: RealmResults<Lecture>? = null
@@ -44,6 +43,9 @@ class AttendActivity : AppCompatActivity() {
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
         )
         setContentView(R.layout.activity_attend)
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        preference = Preference(pref)
 
         realm = Realm.getDefaultInstance()
         realmResults = realm.where(Lecture::class.java)

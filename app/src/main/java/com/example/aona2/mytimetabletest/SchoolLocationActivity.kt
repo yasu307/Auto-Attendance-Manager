@@ -9,12 +9,14 @@ import kotlinx.android.synthetic.main.activity_school_location.*
 
 
 class SchoolLocationActivity : AppCompatActivity() {
-    private val pref = PreferenceManager.getDefaultSharedPreferences(this)
-    private val preference = Preference(pref)
+    private lateinit var preference: Preference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_school_location)
+
+        val pref = PreferenceManager.getDefaultSharedPreferences(this)
+        preference = Preference(pref)
 
         val location = preference.schLocation
         latEdit.setText(location.first.toString())
