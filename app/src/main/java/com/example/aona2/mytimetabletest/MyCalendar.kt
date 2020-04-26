@@ -1,20 +1,23 @@
 package com.example.aona2.mytimetabletest
 
+import android.content.SharedPreferences
 import android.util.Log
+import androidx.preference.PreferenceManager
 import io.realm.Realm
 import io.realm.RealmResults
 import java.util.*
 import kotlin.math.min
 
-class MyCalendar(val periodArray: Array<Int>) {
+class MyCalendar(pref: SharedPreferences) {
+    val pref = pref
+
     private val INF_TIME: Long = 1000000000000000
     private val INF_ID = 100
 
     private lateinit var realm: Realm
     private var realmResults: RealmResults<Lecture>? = null
 
-    private val periodNum = 5
-    //val periodArray = Array<Int>(periodNum + 1, {0})
+    private val preference = Preference(pref)
 
     init{
         realm = Realm.getDefaultInstance()
@@ -31,7 +34,6 @@ class MyCalendar(val periodArray: Array<Int>) {
         var minTime: Long = INF_TIME
         var minIndex: Int = INF_ID
         var minCal: Calendar? = null
-
 
         val rResults = realmResults
         if(rResults != null){
@@ -86,11 +88,11 @@ class MyCalendar(val periodArray: Array<Int>) {
         else if (lecture.youbi < youbi)
             calendar.add(Calendar.DAY_OF_MONTH, (lecture.youbi - youbi + 7))
         else {
-            if (periodArray[(lecture.period)] < hourMinute)
+            if (preference.periodArray[(lecture.period)] < hourMinute)
                 calendar.add(Calendar.DAY_OF_MONTH, 7)
         }
-        calendar.set(Calendar.HOUR_OF_DAY, periodArray[lecture.period] / 100)
-        calendar.set(Calendar.MINUTE, periodArray[lecture.period] % 100)
+        calendar.set(Calendar.HOUR_OF_DAY, preference.periodArray[lecture.period] / 100)
+        calendar.set(Calendar.MINUTE, preference.periodArray[lecture.period] % 100)
         calendar.set(Calendar.SECOND, 0)
 
         return calendar

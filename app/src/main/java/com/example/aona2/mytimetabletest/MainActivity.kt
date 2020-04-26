@@ -15,36 +15,35 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    val lecText = Array(6, { arrayOfNulls<TextView?>(5)})
-    private var periodText : Array<TextView?> = arrayOfNulls(6)
-    val daysText : Array<TextView?> = arrayOfNulls(5)
-    private var LinearArray: Array<LinearLayout?> = arrayOfNulls(6)
-    var textView: TextView? = null
+    private val lecText = Array(6, { arrayOfNulls<TextView?>(5)})
+    private val periodText : Array<TextView?> = arrayOfNulls(6)
+    private val daysText : Array<TextView?> = arrayOfNulls(5)
+    private val LinearArray: Array<LinearLayout?> = arrayOfNulls(6)
+    private var textView: TextView? = null
 
     private lateinit var realm: Realm
 
-    private val periodArray = arrayOf(900, 1035, 1037, 1040, 1042, 1800)
-
     private var isAlarm = true
+
+    private val pref = PreferenceManager.getDefaultSharedPreferences(this)
+    private val preference = Preference(pref)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         realm = Realm.getDefaultInstance()
-
         setView()
 
-        val myCalendar = MyCalendar(periodArray)
-        //myCalendar.periodArray = periodArray
+        val myCalendar = MyCalendar(pref)
         val nextPair = myCalendar.nextTimeLec()
-        if(nextPair.first == null) Log.d("hoge", "hoge")
         myCalendar.logCalendar(nextPair.first, "nextCal")
 
         if(isAlarm) {
@@ -85,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         LinearArray[0]?.addView(textView)
         for(i in 0..5) {
             periodText[i] = TextView(this)
-            val time = periodArray[i]
+            val time = preference?.periodArray[i] ?: 0
             periodText[i]?.text = (i+1).toString() + "限\n" + (time/100).toString() + "時\n" + (time%100).toString() + "分"
             periodText[i]?.setPadding(10,10,10,10)
             periodText[i]?.layoutParams = params
@@ -131,6 +130,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 /*
+//実際に使用する
     private fun dayToYoubi(day: Int): Int{
         val youbi = day + 2
         if(youbi == 8) return 1
@@ -138,14 +138,13 @@ class MainActivity : AppCompatActivity() {
     }
 
  */
-
+    //デバッグ用
     private fun dayToYoubi(day: Int): Int{
         return day + 1
     }
 
     override fun onRestart() {
         super.onRestart()
-
         reload()
     }
 

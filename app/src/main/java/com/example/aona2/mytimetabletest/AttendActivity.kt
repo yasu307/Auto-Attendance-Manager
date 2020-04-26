@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.preference.PreferenceManager
 import com.google.android.gms.location.*
 import io.realm.Realm
 import io.realm.RealmResults
@@ -20,21 +21,13 @@ import kotlinx.android.synthetic.main.activity_attend.*
 import java.util.*
 
 class AttendActivity : AppCompatActivity() {
+    private val pref = PreferenceManager.getDefaultSharedPreferences(this)
+    private val preference = Preference(pref)
 
     private lateinit var realm: Realm
     private var realmResults: RealmResults<Lecture>? = null
 
-    val INF_TIME: Long = 1000000000000000
-    val INF_ID = 100
-
     private var index = -1
-
-    //private val periodNum = 5
-    //private var periodArray = Array<Int>(periodNum + 1, {0})
-    private val periodArray = arrayOf(900, 1035, 1037, 1040, 1042, 1800)
-
-
-    private var location: Pair<Double, Double> = Pair(0.0, 0.0)
 
     private val MY_PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1
 
@@ -64,7 +57,7 @@ class AttendActivity : AppCompatActivity() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         checkPermission()
 
-        var myCalendar = MyCalendar(periodArray)
+        var myCalendar = MyCalendar(pref)
         //myCalendar.periodArray = periodArray
 
         val nextPair = myCalendar.nextIdLec(index)
@@ -159,7 +152,10 @@ class AttendActivity : AppCompatActivity() {
                         Log.d("last", lastLocation.latitude.toString())
                         Log.d("last", lastLocation.longitude.toString())
 
-                        val distance = getDistance(location.first, location.second, lastLocation.latitude, lastLocation.longitude)
+                        val lat: Double = preference.schLocation.first?.toDouble() ?: 0.0
+                        val lng: Double = preference.schLocation.first?.toDouble() ?: 0.0
+
+                        val distance = getDistance(lat, lng, lastLocation.latitude, lastLocation.longitude)
                         Log.d("distance", distance.toString())
                         changeRealm("lectureNum")
                         if(distance < 0.5) changeRealm("attend")
