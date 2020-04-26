@@ -59,11 +59,11 @@ class MyCalendar(periodArray: Array<Int>) {
         nextIndex = minIndex
     }
 
-    fun nextIdLec(index: Int): Pair<Calendar?, Int> {
+    fun nextIdLec(index: Int){
         val now: Calendar = Calendar.getInstance()
         val calendar: Calendar = Calendar.getInstance()
 
-        var nextIndex = index + 1
+        nextIndex = index + 1
 
         var nextCal: Calendar? = null
 
@@ -71,12 +71,11 @@ class MyCalendar(periodArray: Array<Int>) {
 
         if(rResults != null) {
             if (nextIndex == rResults.size) nextIndex = 0
-            val lecture = rResults[nextIndex]
+            val lecture = rResults[nextIndex?:0]
             if (lecture != null) {
-                nextCal = lecToCal(lecture, calendar)
+                nextCalendar = lecToCal(lecture, calendar)
             }
         }
-        return Pair(nextCal, nextIndex)
     }
 
     private fun lecToCal(lecture: Lecture, now: Calendar): Calendar {

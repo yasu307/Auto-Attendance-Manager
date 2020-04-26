@@ -58,39 +58,20 @@ class AttendActivity : AppCompatActivity() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         checkPermission()
-
-        var myCalendar = MyCalendar(pref)
-        //myCalendar.periodArray = periodArray
-
-        val nextPair = myCalendar.nextIdLec(index)
-        myCalendar.logCalendar(nextPair.first, "nextAlarm")
-
-        setAlarm(nextPair.first, nextPair.second)
     }
 
     //アラームをセットする
-    private fun setAlarm(calendar: Calendar?, alarmId: Int){
-        if(calendar == null) return
-
-        var alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+    private fun setAlarm(){
+        val alarm = Alarm(preference.periodArray, index)
         val notifyIntent = Intent(this, AttendActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-
-        notifyIntent.putExtra("index", alarmId)
-
+        notifyIntent.putExtra("index", alarm.myCalendar.nextIndex)
         val notifyPendingIntent = PendingIntent.getActivity(
             this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
-
-        val alarmTimeMillis = calendar.timeInMillis
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(alarmTimeMillis, null), notifyPendingIntent)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTimeMillis, notifyPendingIntent)
-        } else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTimeMillis, notifyPendingIntent)
-        }
+        var alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarm.setAlarm(alarmManager, notifyPendingIntent)
     }
 
     private fun checkPermission() {

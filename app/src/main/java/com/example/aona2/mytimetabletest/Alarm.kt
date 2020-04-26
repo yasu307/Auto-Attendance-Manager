@@ -14,6 +14,12 @@ class Alarm {
         myCalendar.nextTimeLec()
     }
 
+    constructor(periodArray: Array<Int>, index: Int?){
+        myCalendar = MyCalendar(periodArray)
+        if(index != null)
+        myCalendar.nextIdLec(index)
+    }
+
     fun setAlarm(alarmManager: AlarmManager, intent: PendingIntent){
         val alarmTimeMillis: Long? = myCalendar.nextCalendar?.timeInMillis
         if(alarmTimeMillis != null){
