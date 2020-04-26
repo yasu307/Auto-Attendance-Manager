@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -18,7 +17,6 @@ import com.google.android.gms.location.*
 import io.realm.Realm
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_attend.*
-import java.util.*
 
 class AttendActivity : AppCompatActivity() {
     private lateinit var preference: Preference
@@ -58,6 +56,8 @@ class AttendActivity : AppCompatActivity() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         checkPermission()
+
+        setAlarm()
     }
 
     //アラームをセットする

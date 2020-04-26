@@ -3,8 +3,6 @@ package com.example.aona2.mytimetabletest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.os.Build
-import java.util.*
-import android.content.Intent
 
 class Alarm {
     var myCalendar: MyCalendar

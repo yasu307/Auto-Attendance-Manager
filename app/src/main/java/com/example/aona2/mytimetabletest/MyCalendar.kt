@@ -1,27 +1,22 @@
 package com.example.aona2.mytimetabletest
 
-import android.content.SharedPreferences
 import android.util.Log
-import androidx.preference.PreferenceManager
 import io.realm.Realm
 import io.realm.RealmResults
 import java.util.*
 import kotlin.math.min
 
-class MyCalendar(periodArray: Array<Int>) {
+class MyCalendar(val periodArray: Array<Int>) {
     private val INF_TIME: Long = 1000000000000000
     private val INF_ID = 100
 
-    private lateinit var realm: Realm
+    private var realm: Realm = Realm.getDefaultInstance()
     private var realmResults: RealmResults<Lecture>? = null
 
     var nextCalendar: Calendar? = null
     var nextIndex: Int? = null
 
-    val periodArray = periodArray
-
     init{
-        realm = Realm.getDefaultInstance()
         realmResults = realm.where(Lecture::class.java)
             .findAll()
             .sort("period")
@@ -57,6 +52,7 @@ class MyCalendar(periodArray: Array<Int>) {
         }
         nextCalendar = minCal
         nextIndex = minIndex
+        logCalendar(nextCalendar, "nextCalendar")
     }
 
     fun nextIdLec(index: Int){
@@ -76,6 +72,7 @@ class MyCalendar(periodArray: Array<Int>) {
                 nextCalendar = lecToCal(lecture, calendar)
             }
         }
+        logCalendar(nextCalendar, "nextCalendar")
     }
 
     private fun lecToCal(lecture: Lecture, now: Calendar): Calendar {

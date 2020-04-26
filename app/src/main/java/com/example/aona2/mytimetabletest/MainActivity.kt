@@ -5,9 +5,7 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -19,13 +17,12 @@ import androidx.preference.PreferenceManager
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
-    private val lecText = Array(6, { arrayOfNulls<TextView?>(5)})
+    private val lecText = Array(6) { arrayOfNulls<TextView?>(5)}
     private val periodText : Array<TextView?> = arrayOfNulls(6)
     private val daysText : Array<TextView?> = arrayOfNulls(5)
-    private val LinearArray: Array<LinearLayout?> = arrayOfNulls(6)
+    private val linearArray: Array<LinearLayout?> = arrayOfNulls(6)
     private var textView: TextView? = null
 
     private lateinit var realm: Realm
@@ -63,31 +60,31 @@ class MainActivity : AppCompatActivity() {
         drawable.setStroke(1, Color.BLACK)
 
         //LinearLayoutの設定
-        LinearArray[0] = LinearLayout(this)
-        LinearArray[0]?.orientation = LinearLayout.VERTICAL
-        LinearArray[0]?.layoutParams = linearHalfParams
-        horizonLinear?.addView(LinearArray[0])
+        linearArray[0] = LinearLayout(this)
+        linearArray[0]?.orientation = LinearLayout.VERTICAL
+        linearArray[0]?.layoutParams = linearHalfParams
+        horizonLinear?.addView(linearArray[0])
         for(i in 1..5) {
-            LinearArray[i] = LinearLayout(this)
-            LinearArray[i]?.orientation = LinearLayout.VERTICAL
-            LinearArray[i]?.layoutParams = linearParams
-            horizonLinear?.addView(LinearArray[i])
+            linearArray[i] = LinearLayout(this)
+            linearArray[i]?.orientation = LinearLayout.VERTICAL
+            linearArray[i]?.layoutParams = linearParams
+            horizonLinear?.addView(linearArray[i])
         }
 
         //1列目：時限と時間の表示
         textView = TextView(this)
-        textView?.setBackground(drawable)
+        textView?.background = drawable
         textView?.setPadding(10,10,10,10)
         textView?.layoutParams = halfParams
-        LinearArray[0]?.addView(textView)
+        linearArray[0]?.addView(textView)
         for(i in 0..5) {
             periodText[i] = TextView(this)
-            val time = preference?.periodArray[i] ?: 0
+            val time = preference.periodArray[i] ?: 0
             periodText[i]?.text = (i+1).toString() + "限\n" + (time/100).toString() + "時\n" + (time%100).toString() + "分"
             periodText[i]?.setPadding(10,10,10,10)
             periodText[i]?.layoutParams = params
-            periodText[i]?.setBackground(drawable)
-            LinearArray[0]?.addView(periodText[i])
+            periodText[i]?.background = drawable
+            linearArray[0]?.addView(periodText[i])
         }
 
         //1行目:曜日の表示
@@ -97,8 +94,8 @@ class MainActivity : AppCompatActivity() {
             if(days_string != null) daysText[i]?.text = days_string[i]
             daysText[i]?.setPadding(10,10,10,10)
             daysText[i]?.layoutParams = halfParams
-            daysText[i]?.setBackground(drawable)
-            LinearArray[i+1]?.addView(daysText[i])
+            daysText[i]?.background = drawable
+            linearArray[i+1]?.addView(daysText[i])
         }
 
         //授業コマの表示
@@ -113,10 +110,10 @@ class MainActivity : AppCompatActivity() {
                             "授業数:" + lecture?.lectureNum.toString() + "\n" +
                             "出席数:" + lecture?.attend.toString()
                 }
-                lecText[j][i]?.setBackground(drawable)
+                lecText[j][i]?.background = drawable
                 lecText[j][i]?.setPadding(10,10,10,10)
                 lecText[j][i]?.layoutParams = params
-                LinearArray[i+1]?.addView(lecText[j][i])
+                linearArray[i+1]?.addView(lecText[j][i])
                 //クリックの処理
                 lecText[j][i]?.setOnClickListener{
                     val intent = Intent(it.context, LecEditActivity::class.java)
@@ -127,6 +124,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 /*
 //実際に使用する
     private fun dayToYoubi(day: Int): Int{
@@ -172,34 +170,9 @@ class MainActivity : AppCompatActivity() {
         val notifyPendingIntent = PendingIntent.getActivity(
             this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
-        var alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
         alarm.setAlarm(alarmManager, notifyPendingIntent)
-        /*
-        if(calendar == null) return
-
-        var alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        val notifyIntent = Intent(this, AttendActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-
-        notifyIntent.putExtra("index", index)
-
-        val notifyPendingIntent = PendingIntent.getActivity(
-            this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmTimeMillis = calendar.timeInMillis
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(alarmTimeMillis, null), notifyPendingIntent)
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTimeMillis, notifyPendingIntent)
-        } else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTimeMillis, notifyPendingIntent)
-        }
-
-
-         */
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
