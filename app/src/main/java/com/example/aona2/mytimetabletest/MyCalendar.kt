@@ -8,16 +8,17 @@ import io.realm.RealmResults
 import java.util.*
 import kotlin.math.min
 
-class MyCalendar(pref: SharedPreferences) {
-    val pref = pref
-
+class MyCalendar(periodArray: Array<Int>) {
     private val INF_TIME: Long = 1000000000000000
     private val INF_ID = 100
 
     private lateinit var realm: Realm
     private var realmResults: RealmResults<Lecture>? = null
 
-    private val preference = Preference(pref)
+    var nextCalendar: Calendar? = null
+    var nextIndex: Int? = null
+
+    val periodArray = periodArray
 
     init{
         realm = Realm.getDefaultInstance()
@@ -27,7 +28,7 @@ class MyCalendar(pref: SharedPreferences) {
             .sort("youbi")
     }
 
-    fun nextTimeLec(): Pair<Calendar?, Int> {
+    fun nextTimeLec() {
         val now: Calendar = Calendar.getInstance()
         logCalendar(now, "now")
 
@@ -54,7 +55,8 @@ class MyCalendar(pref: SharedPreferences) {
                 }
             }
         }
-        return Pair(minCal, minIndex)
+        nextCalendar = minCal
+        nextIndex = minIndex
     }
 
     fun nextIdLec(index: Int): Pair<Calendar?, Int> {
@@ -88,11 +90,11 @@ class MyCalendar(pref: SharedPreferences) {
         else if (lecture.youbi < youbi)
             calendar.add(Calendar.DAY_OF_MONTH, (lecture.youbi - youbi + 7))
         else {
-            if (preference.periodArray[(lecture.period)] < hourMinute)
+            if (periodArray[(lecture.period)] < hourMinute)
                 calendar.add(Calendar.DAY_OF_MONTH, 7)
         }
-        calendar.set(Calendar.HOUR_OF_DAY, preference.periodArray[lecture.period] / 100)
-        calendar.set(Calendar.MINUTE, preference.periodArray[lecture.period] % 100)
+        calendar.set(Calendar.HOUR_OF_DAY, periodArray[lecture.period] / 100)
+        calendar.set(Calendar.MINUTE, periodArray[lecture.period] % 100)
         calendar.set(Calendar.SECOND, 0)
 
         return calendar

@@ -44,12 +44,8 @@ class MainActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
         setView()
 
-        val myCalendar = MyCalendar(pref)
-        val nextPair = myCalendar.nextTimeLec()
-        myCalendar.logCalendar(nextPair.first, "nextCal")
-
         if(isAlarm) {
-            setAlarm(nextPair.first, nextPair.second)
+            setAlarm()
             //setAlarm(myCalendar.minAfter(2), 0)
         }
     }
@@ -166,7 +162,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     //アラームをセットする
-    private fun setAlarm(calendar: Calendar?, index: Int){
+    private fun setAlarm(){
+        val alarm = Alarm(preference.periodArray)
+
+        val notifyIntent = Intent(this, AttendActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        notifyIntent.putExtra("index", alarm.myCalendar.nextIndex)
+        val notifyPendingIntent = PendingIntent.getActivity(
+            this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        var alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
+        alarm.setAlarm(alarmManager, notifyPendingIntent)
+        /*
         if(calendar == null) return
 
         var alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
@@ -188,6 +197,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTimeMillis, notifyPendingIntent)
         }
+
+
+         */
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
