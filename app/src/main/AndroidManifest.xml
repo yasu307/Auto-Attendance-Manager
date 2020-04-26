@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.aona2.mytimetabletest">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".CustomApplication"
@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AttendActivity"></activity>
+        <activity android:name=".PeriodActivity"></activity>
+        <activity android:name=".SchoolLocationActivity" />
+        <activity android:name=".AttendActivity" />
         <activity android:name=".LecEditActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
