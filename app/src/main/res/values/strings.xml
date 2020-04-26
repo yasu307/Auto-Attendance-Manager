@@ -3,4 +3,7 @@
     <string name="name_text">名前</string>
     <string name="delete_text">削除</string>
     <string name="save_text">保存</string>
+    <string name="alarmMenu_text">アラームをセットする</string>
+    <string name="periodMenu_text">時限の開始時間を変更</string>
+    <string name="schoolMenu_text">学校の位置の変更</string>
 </resources>

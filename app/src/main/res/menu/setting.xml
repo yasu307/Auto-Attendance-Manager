@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/alarmMenu"
+        android:title="@string/alarmMenu_text" />
+    <item
+        android:id="@+id/periodMenu"
+        android:title="@string/periodMenu_text" />
+    <item
+        android:id="@+id/schoolLocationMenu"
+        android:title="@string/schoolMenu_text" />
+</menu>
