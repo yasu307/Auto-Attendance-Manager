@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private var isAlarm = true
 
     private lateinit var preference: Preference
+    private lateinit var alarmManager: AlarmManager
+    private lateinit var notifyPendingIntent: PendingIntent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,17 +172,33 @@ class MainActivity : AppCompatActivity() {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         notifyIntent.putExtra("index", alarm.myCalendar.nextIndex)
-        val notifyPendingIntent = PendingIntent.getActivity(
+        notifyPendingIntent = PendingIntent.getActivity(
             this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
         alarm.setAlarm(alarmManager, notifyPendingIntent)
+        Toast.makeText(applicationContext, "出席管理をセットしました", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun cancelAlarm(){
+        alarmManager.cancel(notifyPendingIntent)
+        Toast.makeText(applicationContext, "出席管理を解除しました", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.setting, menu)
+        val item = menu?.getItem(0)
+        if(isAlarm) item?.title = "アラームを解除する"
+        else item?.title = "アラームをセットする"
         return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val item = menu?.getItem(0)
+        if(isAlarm) item?.title = "アラームを解除する"
+        else item?.title = "アラームをセットする"
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -188,10 +206,12 @@ class MainActivity : AppCompatActivity() {
             R.id.alarmMenu -> {
                 if(isAlarm){
                     isAlarm = false
-                    Toast.makeText(applicationContext, "出席管理を解除しました", Toast.LENGTH_SHORT).show()
+                    cancelAlarm()
+                    invalidateOptionsMenu()
                 }else{
                     isAlarm = true
-                    Toast.makeText(applicationContext, "出席管理を設定しました", Toast.LENGTH_SHORT).show()
+                    setAlarm()
+                    invalidateOptionsMenu()
                 }
                 return true
             }
