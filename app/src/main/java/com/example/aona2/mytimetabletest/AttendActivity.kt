@@ -70,7 +70,7 @@ class AttendActivity : AppCompatActivity() {
         val notifyPendingIntent = PendingIntent.getActivity(
             this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
-        var alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+        val alarmManager : AlarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
         alarm.setAlarm(alarmManager, notifyPendingIntent)
     }
 
@@ -174,7 +174,7 @@ class AttendActivity : AppCompatActivity() {
         val rResults = realmResults
         if(rResults != null) {
             Log.d("realmIndexSize", rResults.size.toString())
-            for (i in 0..(rResults.size-1)) {
+            for (i in 0 until rResults.size) {
                 val lecture = rResults[i]
                 if (lecture != null) {
                     Log.d("realmId", lecture.id.toString())

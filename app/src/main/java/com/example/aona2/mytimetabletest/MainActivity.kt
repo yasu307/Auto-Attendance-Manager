@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         linearArray[0]?.addView(textView)
         for(i in 0..5) {
             periodText[i] = TextView(this)
-            val time = preference.periodArray[i] ?: 0
+            val time = preference.periodArray[i]
             periodText[i]?.text = (i+1).toString() + "限\n" + (time/100).toString() + "時\n" + (time%100).toString() + "分"
             periodText[i]?.setPadding(10,10,10,10)
             periodText[i]?.layoutParams = params
@@ -88,10 +88,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         //1行目:曜日の表示
-        val days_string = resources?.getStringArray(R.array.Days)
+        val daysString = resources?.getStringArray(R.array.Days)
         for(i in 0..4){
             daysText[i] = TextView(this)
-            if(days_string != null) daysText[i]?.text = days_string[i]
+            if(daysString != null) daysText[i]?.text = daysString[i]
             daysText[i]?.setPadding(10,10,10,10)
             daysText[i]?.layoutParams = halfParams
             daysText[i]?.background = drawable
@@ -106,9 +106,9 @@ class MainActivity : AppCompatActivity() {
                 val lecture = realm.where<Lecture>().equalTo("youbi", dayToYoubi(i))
                     .equalTo("period", j).findFirst()
                 if(lecture != null) {
-                    lecText[j][i]?.text = lecture?.name + "\n" +
-                            "授業数:" + lecture?.lectureNum.toString() + "\n" +
-                            "出席数:" + lecture?.attend.toString()
+                    lecText[j][i]?.text = lecture.name + "\n" +
+                            "授業数:" + lecture.lectureNum.toString() + "\n" +
+                            "出席数:" + lecture.attend.toString()
                 }
                 lecText[j][i]?.background = drawable
                 lecText[j][i]?.setPadding(10,10,10,10)
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-/*
+
 //実際に使用する
     private fun dayToYoubi(day: Int): Int{
         val youbi = day + 2
@@ -133,11 +133,14 @@ class MainActivity : AppCompatActivity() {
         else return youbi
     }
 
- */
+ /*
     //デバッグ用
     private fun dayToYoubi(day: Int): Int{
         return day + 1
     }
+
+
+  */
 
     override fun onRestart() {
         super.onRestart()
@@ -180,8 +183,8 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.alarmMenu -> {
                 if(isAlarm){
                     isAlarm = false

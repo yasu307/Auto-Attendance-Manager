@@ -6,9 +6,9 @@ import io.realm.RealmResults
 import java.util.*
 import kotlin.math.min
 
-class MyCalendar(val periodArray: Array<Int>) {
-    private val INF_TIME: Long = 1000000000000000
-    private val INF_ID = 100
+class MyCalendar(private val periodArray: Array<Int>) {
+    private val infTime: Long = 1000000000000000
+    private val infId = 100
 
     private var realm: Realm = Realm.getDefaultInstance()
     private var realmResults: RealmResults<Lecture>? = null
@@ -27,14 +27,13 @@ class MyCalendar(val periodArray: Array<Int>) {
         val now: Calendar = Calendar.getInstance()
         logCalendar(now, "now")
 
-        var minTime: Long = INF_TIME
-        var minIndex: Int = INF_ID
+        var minTime: Long = infTime
+        var minIndex: Int = infId
         var minCal: Calendar? = null
 
         val rResults = realmResults
         if(rResults != null){
-            //if(rResults.size == 0) return Pair(minCal?,-1)
-            for (i in 0..(rResults.size-1)) {
+            for (i in 0 until rResults.size) {
                 var calendar: Calendar = Calendar.getInstance()
                 val lecture = rResults[i]
 
@@ -56,12 +55,8 @@ class MyCalendar(val periodArray: Array<Int>) {
     }
 
     fun nextIdLec(index: Int){
-        val now: Calendar = Calendar.getInstance()
         val calendar: Calendar = Calendar.getInstance()
-
         nextIndex = index + 1
-
-        var nextCal: Calendar? = null
 
         val rResults = realmResults
 
@@ -96,7 +91,7 @@ class MyCalendar(val periodArray: Array<Int>) {
         return calendar
     }
 
-    fun logCalendar(calendar: Calendar?, string: String){
+    private fun logCalendar(calendar: Calendar?, string: String){
         if(calendar != null) {
             Log.d("Calendar name", string)
             Log.d("Calendar YEAR", calendar.get(Calendar.YEAR).toString())

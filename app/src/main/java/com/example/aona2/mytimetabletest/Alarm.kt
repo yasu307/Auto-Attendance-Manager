@@ -2,7 +2,6 @@ package com.example.aona2.mytimetabletest
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.os.Build
 
 class Alarm {
     var myCalendar: MyCalendar
@@ -21,6 +20,11 @@ class Alarm {
     fun setAlarm(alarmManager: AlarmManager, intent: PendingIntent){
         val alarmTimeMillis: Long? = myCalendar.nextCalendar?.timeInMillis
         if(alarmTimeMillis != null){
+            alarmManager.setAlarmClock(
+                AlarmManager.AlarmClockInfo(alarmTimeMillis, null), intent
+            )
+
+            /* LOLIPOP以下のバージョンをサポートする場合
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 alarmManager.setAlarmClock(
                     AlarmManager.AlarmClockInfo(alarmTimeMillis, null), intent
@@ -30,6 +34,8 @@ class Alarm {
             } else {
                 alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTimeMillis, intent)
             }
+
+             */
         }
     }
 }

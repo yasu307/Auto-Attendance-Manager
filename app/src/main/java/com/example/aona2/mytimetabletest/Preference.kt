@@ -3,10 +3,9 @@ package com.example.aona2.mytimetabletest
 import android.content.SharedPreferences
 import android.util.Log
 
-class Preference(pref: SharedPreferences) {
-    private val pref = pref
+class Preference(private val pref: SharedPreferences) {
     private val periodNum = 5
-    var periodArray = Array<Int>(periodNum + 1, {0})
+    var periodArray = Array(periodNum + 1) {0}
     var schLocation: Pair<String?, String?>  = Pair(null, null)
 
     init {
@@ -18,8 +17,8 @@ class Preference(pref: SharedPreferences) {
     //共有プリファレンスに値を保存
     private fun putDefaultPref() {
         val editor = pref.edit()
-        val lat: Double = 35.531371
-        val lng: Double = 139.697453
+        val lat = 35.531371
+        val lng = 139.697453
 
         editor.putInt("period1", 900)
             .putInt("period2", 1830)
@@ -46,7 +45,7 @@ class Preference(pref: SharedPreferences) {
     }
 
     private fun setPeriod(): Array<Int>{
-        for(i in 0..periodNum-1){
+        for(i in 0 until periodNum){
             val string = "period" + (i+1).toString()
             periodArray[i] = pref.getInt(string, 0)
             Log.d("period", periodArray[i].toString())
