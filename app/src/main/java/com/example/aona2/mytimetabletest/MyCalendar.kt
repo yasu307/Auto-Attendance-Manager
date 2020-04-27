@@ -51,7 +51,6 @@ class MyCalendar(private val periodArray: Array<Int>) {
         }
         nextCalendar = minCal
         nextIndex = minIndex
-        logCalendar(nextCalendar, "nextCalendar")
     }
 
     fun nextIdLec(index: Int){
@@ -67,7 +66,6 @@ class MyCalendar(private val periodArray: Array<Int>) {
                 nextCalendar = lecToCal(lecture, calendar)
             }
         }
-        logCalendar(nextCalendar, "nextCalendar")
     }
 
     private fun lecToCal(lecture: Lecture, now: Calendar): Calendar {
@@ -91,7 +89,7 @@ class MyCalendar(private val periodArray: Array<Int>) {
         return calendar
     }
 
-    private fun logCalendar(calendar: Calendar?, string: String){
+    fun logCalendar(calendar: Calendar?, string: String){
         if(calendar != null) {
             Log.d("Calendar name", string)
             Log.d("Calendar YEAR", calendar.get(Calendar.YEAR).toString())
@@ -104,9 +102,9 @@ class MyCalendar(private val periodArray: Array<Int>) {
         }
     }
 
-    fun minAfter(minutes: Int): Calendar {
+    fun minAfter(minutes: Int){
         val calendar: Calendar = Calendar.getInstance()
         calendar.add(Calendar.MINUTE, minutes)
-        return calendar
+        nextCalendar = calendar
     }
 }

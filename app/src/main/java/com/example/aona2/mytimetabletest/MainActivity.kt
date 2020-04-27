@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -127,6 +128,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun showTimePickerDialog(v: View){
+        val timePickerFragment = TimePickerFragment()
+        timePickerFragment.show(supportFragmentManager, "timePicker")
+    }
+
 
 //実際に使用する
     private fun dayToYoubi(day: Int): Int{
@@ -167,6 +173,8 @@ class MainActivity : AppCompatActivity() {
     //アラームをセットする
     private fun setAlarm(){
         val alarm = Alarm(preference.periodArray)
+        //デバッグ用　2分後にアラームを設定する
+        alarm.minAfter(2)
 
         val notifyIntent = Intent(this, AttendActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

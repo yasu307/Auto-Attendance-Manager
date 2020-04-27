@@ -37,5 +37,10 @@ class Alarm {
 
              */
         }
+        myCalendar.logCalendar(myCalendar.nextCalendar, "nextCalendar")
+    }
+
+    fun minAfter(minutes: Int){
+        myCalendar.minAfter(minutes)
     }
 }
