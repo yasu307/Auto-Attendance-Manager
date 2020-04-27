@@ -2,6 +2,7 @@ package com.example.aona2.mytimetabletest
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
@@ -19,7 +21,7 @@ import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val lecText = Array(6) { arrayOfNulls<TextView?>(5)}
     private val periodText : Array<TextView?> = arrayOfNulls(6)
     private val daysText : Array<TextView?> = arrayOfNulls(5)
@@ -129,7 +131,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showTimePickerDialog(v: View){
-        val timePickerFragment = TimePickerFragment()
+        val timePickerFragment = TimePickerFragment(12, 0)
         timePickerFragment.show(supportFragmentManager, "timePicker")
     }
 
@@ -235,5 +237,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+
     }
 }
