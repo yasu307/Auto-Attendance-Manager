@@ -234,6 +234,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             }
             R.id.periodMenu -> {
                 preference.periodInit()
+                reload()
                 Toast.makeText(applicationContext, "授業時間を初期化しました", Toast.LENGTH_SHORT).show()
                 return true
             }
@@ -253,6 +254,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                         }
                     }
                 }
+                reload()
                 Toast.makeText(applicationContext, "すべての授業を削除しました", Toast.LENGTH_SHORT).show()
                 return true
             }
@@ -262,14 +264,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-        /*
-        periodText[timePickerIndex?:0]?.text =
-                (timePickerIndex?:0 + 1).toString() + "限\n" + hourOfDay.toString() + "時\n" + minute.toString() + "分"
-        drawable.setStroke(1, Color.BLACK)
-        periodText[timePickerIndex?:0]?.layoutParams = params
-        periodText[timePickerIndex?:0]?.background = drawable
-
-         */
         preference.putPeriod(timePickerIndex?:0, hourOfDay, minute)
         reload()
     }
