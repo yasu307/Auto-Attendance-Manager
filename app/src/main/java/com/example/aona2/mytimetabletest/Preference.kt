@@ -26,10 +26,11 @@ class Preference(private val pref: SharedPreferences) {
         val lng = 139.697453
 
         editor.putInt("period1", 900)
-            .putInt("period2", 1830)
-            .putInt("period3", 1832)
-            .putInt("period4", 1834)
-            .putInt("period5", 2159)
+            .putInt("period2", 1040)
+            .putInt("period3", 1300)
+            .putInt("period4", 1440)
+            .putInt("period5", 1615)
+            .putInt("period6", 1800)
             .putString("lat", lat.toString())
             .putString("lng", lng.toString())
             .putBoolean("isDefault", false)
@@ -41,6 +42,14 @@ class Preference(private val pref: SharedPreferences) {
         editor.putString("lat", location.first)
             .putString("lng", location.first)
             .apply()
+    }
+
+    fun putPeriod(periodIndex: Int, hour: Int, minute: Int){
+        val time = hour * 100 + minute
+        val periodString = "period" + (periodIndex+1).toString()
+        editor.putInt(periodString, time)
+            .apply()
+        periodArray[periodIndex] = time
     }
 
     //共有プリファレンスに保存されている値を取得する
@@ -58,5 +67,4 @@ class Preference(private val pref: SharedPreferences) {
         }
         return periodArray
     }
-
 }

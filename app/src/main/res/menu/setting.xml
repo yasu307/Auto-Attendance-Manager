@@ -5,9 +5,6 @@
         android:id="@+id/alarmMenu"
         android:title="@string/alarmMenu_text" />
     <item
-        android:id="@+id/periodMenu"
-        android:title="@string/periodMenu_text" />
-    <item
         android:id="@+id/schoolLocationMenu"
         android:title="@string/schoolMenu_text" />
 </menu>

@@ -39,6 +39,14 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
     private var timePickerIndex: Int? = null
 
+    private val drawable = GradientDrawable()
+    //レイアウトパラメータの宣言
+    private val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f)
+    private val halfParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.5f)
+    private val linearParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
+    private val linearHalfParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
+    private val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,21 +58,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         setView()
 
         if(isAlarm) {
-            setAlarm()
+            //setAlarm()
             //setAlarm(myCalendar.minAfter(2), 0)
         }
     }
 
     private fun setView(){
-        //レイアウトパラメータの宣言
-        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f)
-        val halfParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.5f)
-        val linearParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
-        val linearHalfParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
-        val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
-
         //外枠の設定
-        val drawable = GradientDrawable()
         drawable.setStroke(1, Color.BLACK)
 
         //LinearLayoutの設定
@@ -92,14 +92,12 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             periodText[i]?.setPadding(10,10,10,10)
             periodText[i]?.layoutParams = params
             periodText[i]?.background = drawable
-
+            periodText[i]?.tag = i
             periodText[i]?.setOnClickListener {
                 val timePickerFragment = TimePickerFragment(12, 0, this)
-                timePickerIndex = i
+                timePickerIndex = it.tag.toString().toInt()
                 timePickerFragment.show(supportFragmentManager, "timePicker")
             }
-
-
             linearArray[0]?.addView(periodText[i])
         }
 
@@ -235,21 +233,21 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                 startActivity(intent)
                 return true
             }
-            R.id.periodMenu -> {
-                val intent = Intent(this, PeriodActivity::class.java)
-                startActivity(intent)
-                return true
-            }
         }
         return super.onOptionsItemSelected(item)
     }
 
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-            periodText[timePickerIndex?:0]?.text =
+        /*
+        periodText[timePickerIndex?:0]?.text =
                 (timePickerIndex?:0 + 1).toString() + "限\n" + hourOfDay.toString() + "時\n" + minute.toString() + "分"
+        drawable.setStroke(1, Color.BLACK)
+        periodText[timePickerIndex?:0]?.layoutParams = params
+        periodText[timePickerIndex?:0]?.background = drawable
 
-        Log.d("ontimeset","ontimeset")
-
+         */
+        preference.putPeriod(timePickerIndex?:0, hourOfDay, minute)
+        reload()
     }
 }
