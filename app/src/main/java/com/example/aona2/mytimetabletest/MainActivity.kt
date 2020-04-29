@@ -32,8 +32,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
     private lateinit var realm: Realm
 
-    private var isAlarm = true
-
     private lateinit var preference: Preference
     private lateinit var alarmManager: AlarmManager
     private lateinit var notifyPendingIntent: PendingIntent
@@ -58,7 +56,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         realm = Realm.getDefaultInstance()
         setView()
 
-        if(isAlarm) {
+        if(preference.isAlarm?:true) {
             setAlarm()
         }
     }
@@ -201,14 +199,14 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.setting, menu)
         val item = menu?.getItem(0)
-        if(isAlarm) item?.title = "アラームを解除する"
+        if(preference.isAlarm?:true) item?.title = "アラームを解除する"
         else item?.title = "アラームをセットする"
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val item = menu?.getItem(0)
-        if(isAlarm) item?.title = "アラームを解除する"
+        if(preference.isAlarm?:true) item?.title = "アラームを解除する"
         else item?.title = "アラームをセットする"
         return super.onPrepareOptionsMenu(menu)
     }
@@ -216,12 +214,12 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.alarmMenu -> {
-                if(isAlarm){
-                    isAlarm = false
+                if(preference.isAlarm?:true){
+                    preference.putIsAlarm(false)
                     cancelAlarm()
                     invalidateOptionsMenu()
                 }else{
-                    isAlarm = true
+                    preference.putIsAlarm(true)
                     setAlarm()
                     invalidateOptionsMenu()
                 }

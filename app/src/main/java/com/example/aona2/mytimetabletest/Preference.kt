@@ -7,6 +7,7 @@ class Preference(private val pref: SharedPreferences) {
     private val periodNum = 5
     var periodArray = Array(periodNum + 1) {0}
     var schLocation: Pair<String?, String?>  = Pair(null, null)
+    var isAlarm: Boolean? = null
 
     private val lat = 35.531371
     private val lng = 139.697453
@@ -17,6 +18,7 @@ class Preference(private val pref: SharedPreferences) {
         if(isDefault()) putDefaultPref()
         setLocation()
         setPeriod()
+        setIsAlarm()
     }
 
     private fun isDefault(): Boolean{
@@ -34,6 +36,7 @@ class Preference(private val pref: SharedPreferences) {
             .putString("lat", lat.toString())
             .putString("lng", lng.toString())
             .putBoolean("isDefault", false)
+            .putBoolean("isAlarm", true)
             .apply()
         //Log.d("preference","putDefaultPref")
     }
@@ -68,6 +71,12 @@ class Preference(private val pref: SharedPreferences) {
         periodArray[periodIndex] = time
     }
 
+    fun putIsAlarm(IsAlarm: Boolean){
+        isAlarm = IsAlarm
+        editor.putBoolean("isAlarm", IsAlarm)
+            .apply()
+    }
+
     //共有プリファレンスに保存されている値を取得する
     private fun setLocation() {
         val lat = pref.getString("lat", "0")
@@ -75,12 +84,15 @@ class Preference(private val pref: SharedPreferences) {
         schLocation = Pair(lat, lng)
     }
 
-    private fun setPeriod(): Array<Int>{
+    private fun setPeriod(){
         for(i in 0 until periodNum){
             val string = "period" + (i+1).toString()
             periodArray[i] = pref.getInt(string, 0)
             Log.d("period", periodArray[i].toString())
         }
-        return periodArray
+    }
+
+    private fun setIsAlarm(){
+        isAlarm = pref.getBoolean("isAlarm", true)
     }
 }
