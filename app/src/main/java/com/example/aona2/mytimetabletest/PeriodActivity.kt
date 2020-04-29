@@ -11,13 +11,15 @@ class PeriodActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_period)
-
     }
+    /*
 
     fun showTimePickerDialog(v: View){
         val timePickerFragment = TimePickerFragment(12, 0)
         timePickerFragment.show(supportFragmentManager, "timePicker")
     }
+
+     */
 
 
 }

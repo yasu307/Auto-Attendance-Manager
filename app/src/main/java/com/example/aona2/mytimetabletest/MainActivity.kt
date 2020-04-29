@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -91,14 +92,14 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             periodText[i]?.setPadding(10,10,10,10)
             periodText[i]?.layoutParams = params
             periodText[i]?.background = drawable
-            /*
+
             periodText[i]?.setOnClickListener {
-                val timePickerFragment = TimePickerFragment(12, 0)
+                val timePickerFragment = TimePickerFragment(12, 0, this)
                 timePickerIndex = i
                 timePickerFragment.show(supportFragmentManager, "timePicker")
             }
 
-             */
+
             linearArray[0]?.addView(periodText[i])
         }
 
@@ -245,9 +246,10 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
 
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-        // Do something with the time chosen by the user
             periodText[timePickerIndex?:0]?.text =
                 (timePickerIndex?:0 + 1).toString() + "限\n" + hourOfDay.toString() + "時\n" + minute.toString() + "分"
+
+        Log.d("ontimeset","ontimeset")
 
     }
 }
