@@ -1,5 +1,6 @@
 package com.example.aona2.mytimetabletest
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -12,6 +13,6 @@ class TimePickerFragment(private var hour: Int, private var minute: Int, private
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // Create a new instance of TimePickerDialog and return it
-        return TimePickerDialog(activity, listener, hour, minute, DateFormat.is24HourFormat(activity))
+        return TimePickerDialog(activity, R.style.TimePickerDialogTheme, listener, hour, minute, DateFormat.is24HourFormat(activity))
     }
 }
