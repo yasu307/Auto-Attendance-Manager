@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -58,8 +59,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         setView()
 
         if(isAlarm) {
-            //setAlarm()
-            //setAlarm(myCalendar.minAfter(2), 0)
+            setAlarm()
         }
     }
 
@@ -152,7 +152,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         return day + 1
     }
 
-
   */
 
     override fun onRestart() {
@@ -179,7 +178,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private fun setAlarm(){
         val alarm = Alarm(preference.periodArray)
         //デバッグ用　2分後にアラームを設定する
-        alarm.minAfter(2)
+        //alarm.minAfter(2)
 
         val notifyIntent = Intent(this, AttendActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -231,6 +230,30 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             R.id.schoolLocationMenu -> {
                 val intent = Intent(this, SchoolLocationActivity::class.java)
                 startActivity(intent)
+                return true
+            }
+            R.id.periodMenu -> {
+                preference.periodInit()
+                Toast.makeText(applicationContext, "授業時間を初期化しました", Toast.LENGTH_SHORT).show()
+                return true
+            }
+            R.id.lectureMenu-> {
+                val realmResults = realm.where(Lecture::class.java)
+                    .findAll()
+                    .sort("period")
+                    .sort("youbi")
+                realm.executeTransaction {
+                    if(realmResults != null) {
+                        Log.d("realmResult", realmResults.size.toString())
+                        for (i in 0 until (realmResults.size)) {
+                            Log.d("realmResult", realmResults[i]?.name?:"none")
+                            Log.d("realmResult", " ")
+                            //if(realmResults[i] != null)
+                            //realmResults[i]?.deleteFromRealm()
+                        }
+                    }
+                }
+                Toast.makeText(applicationContext, "すべての授業を削除しました", Toast.LENGTH_SHORT).show()
                 return true
             }
         }

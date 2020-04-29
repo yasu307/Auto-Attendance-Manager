@@ -8,6 +8,9 @@ class Preference(private val pref: SharedPreferences) {
     var periodArray = Array(periodNum + 1) {0}
     var schLocation: Pair<String?, String?>  = Pair(null, null)
 
+    private val lat = 35.531371
+    private val lng = 139.697453
+
     private var editor: SharedPreferences.Editor = pref.edit()
 
     init {
@@ -22,9 +25,6 @@ class Preference(private val pref: SharedPreferences) {
 
     //共有プリファレンスに値を保存
     private fun putDefaultPref() {
-        val lat = 35.531371
-        val lng = 139.697453
-
         editor.putInt("period1", 900)
             .putInt("period2", 1040)
             .putInt("period3", 1300)
@@ -36,6 +36,22 @@ class Preference(private val pref: SharedPreferences) {
             .putBoolean("isDefault", false)
             .apply()
         //Log.d("preference","putDefaultPref")
+    }
+
+    fun periodInit(){
+        editor.putInt("period1", 900)
+            .putInt("period2", 1040)
+            .putInt("period3", 1300)
+            .putInt("period4", 1440)
+            .putInt("period5", 1615)
+            .putInt("period6", 1800)
+            .apply()
+    }
+
+    fun locationInit(){
+        editor.putString("lat", lat.toString())
+            .putString("lng", lng.toString())
+            .apply()
     }
 
     fun putLocation(location:Pair<String, String>){

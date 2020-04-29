@@ -6,4 +6,7 @@
     <string name="alarmMenu_text">アラームをセットする</string>
     <string name="periodMenu_text">時限の開始時間を変更</string>
     <string name="schoolMenu_text">学校の位置の変更</string>
+    <string name="periodInit_text">時限の時間を初期化</string>
+    <string name="lectureInit_text">授業を初期化</string>
+    <string name="lectureDelete_text">すべての授業を削除</string>
 </resources>

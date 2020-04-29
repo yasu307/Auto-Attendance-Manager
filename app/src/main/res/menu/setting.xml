@@ -7,4 +7,10 @@
     <item
         android:id="@+id/schoolLocationMenu"
         android:title="@string/schoolMenu_text" />
+    <item
+        android:id="@+id/periodMenu"
+        android:title="@string/periodInit_text" />
+    <item
+        android:id="@+id/lectureMenu"
+        android:title="@string/lectureDelete_text" />
 </menu>
