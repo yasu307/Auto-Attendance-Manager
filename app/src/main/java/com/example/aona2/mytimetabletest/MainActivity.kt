@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private lateinit var alarmManager: AlarmManager
     private lateinit var notifyPendingIntent: PendingIntent
 
+    private var timePickerIndex: Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -89,6 +91,14 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             periodText[i]?.setPadding(10,10,10,10)
             periodText[i]?.layoutParams = params
             periodText[i]?.background = drawable
+            /*
+            periodText[i]?.setOnClickListener {
+                val timePickerFragment = TimePickerFragment(12, 0)
+                timePickerIndex = i
+                timePickerFragment.show(supportFragmentManager, "timePicker")
+            }
+
+             */
             linearArray[0]?.addView(periodText[i])
         }
 
@@ -129,12 +139,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             }
         }
     }
-
-    fun showTimePickerDialog(v: View){
-        val timePickerFragment = TimePickerFragment(12, 0)
-        timePickerFragment.show(supportFragmentManager, "timePicker")
-    }
-
 
 //実際に使用する
     private fun dayToYoubi(day: Int): Int{
@@ -239,7 +243,11 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+
+    override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
+        // Do something with the time chosen by the user
+            periodText[timePickerIndex?:0]?.text =
+                (timePickerIndex?:0 + 1).toString() + "限\n" + hourOfDay.toString() + "時\n" + minute.toString() + "分"
 
     }
 }
