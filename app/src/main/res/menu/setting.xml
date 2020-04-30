@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/alarmMenu"
-        android:title="@string/alarmMenu_text" />
+        android:icon="@android:drawable/ic_lock_idle_alarm"
+        android:title="@string/alarmMenu_text"
+        app:showAsAction="always" />
     <item
-        android:id="@+id/schoolLocationMenu"
-        android:title="@string/schoolMenu_text" />
+        android:id="@+id/lectureMenu"
+        android:title="@string/lectureDelete_text" />
     <item
         android:id="@+id/periodMenu"
         android:title="@string/periodInit_text" />
     <item
-        android:id="@+id/lectureMenu"
-        android:title="@string/lectureDelete_text" />
+        android:id="@+id/schoolLocationMenu"
+        android:title="@string/schoolMenu_text" />
 </menu>

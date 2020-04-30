@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -199,15 +200,29 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.setting, menu)
         val item = menu?.getItem(0)
-        if(preference.isAlarm?:true) item?.title = "アラームを解除する"
-        else item?.title = "アラームをセットする"
+        if(preference.isAlarm?:true){
+            item?.title = "アラームを解除する"
+            item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_lock_idle_alarm, null)
+
+        }
+        else{
+            item?.title = "アラームをセットする"
+            item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_delete, null)
+        }
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val item = menu?.getItem(0)
-        if(preference.isAlarm?:true) item?.title = "アラームを解除する"
-        else item?.title = "アラームをセットする"
+        if(preference.isAlarm?:true) {
+            item?.title = "アラームを解除する"
+            item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_lock_idle_alarm, null)
+        }
+        else{
+            item?.title = "アラームをセットする"
+            item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_delete, null)
+        }
+
         return super.onPrepareOptionsMenu(menu)
     }
 
