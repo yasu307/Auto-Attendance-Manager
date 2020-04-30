@@ -203,7 +203,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         if(preference.isAlarm?:true){
             item?.title = "アラームを解除する"
             item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_lock_idle_alarm, null)
-
         }
         else{
             item?.title = "アラームをセットする"
@@ -222,7 +221,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             item?.title = "アラームをセットする"
             item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_delete, null)
         }
-
         return super.onPrepareOptionsMenu(menu)
     }
 

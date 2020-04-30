@@ -68,17 +68,20 @@ class LecEditActivity : AppCompatActivity() {
         }
     }
 
-/*
+    //実際に使用する
     private fun dayToYoubi(day: Int): Int{
         val youbi = day + 2
         if(youbi == 8) return 1
         else return youbi
     }
- */
 
-    private fun dayToYoubi(day: Int): Int{
-        return day + 1
-    }
+    /*
+       //デバッグ用
+       private fun dayToYoubi(day: Int): Int{
+           return day + 1
+       }
+
+     */
 
     override fun onDestroy() {
         super.onDestroy()
