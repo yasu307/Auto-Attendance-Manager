@@ -258,12 +258,10 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                     .sort("youbi")
                 realm.executeTransaction {
                     if(realmResults != null) {
-                        Log.d("realmResult", realmResults.size.toString())
                         for (i in 0 until (realmResults.size)) {
-                            Log.d("realmResult", realmResults[i]?.name?:"none")
-                            Log.d("realmResult", " ")
-                            //if(realmResults[i] != null)
-                            //realmResults[i]?.deleteFromRealm()
+                            if(realmResults[0] != null){
+                                realmResults[0]?.deleteFromRealm()
+                            }
                         }
                     }
                 }
