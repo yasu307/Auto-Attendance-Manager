@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private fun setView(){
         //外枠の設定
         drawable.setStroke(1, Color.BLACK)
+        drawable.setColor(Color.WHITE)
 
         //LinearLayoutの設定
         linearArray[0] = LinearLayout(this)
@@ -112,8 +113,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         }
 
         //授業コマの表示
+        val colorList = resources?.getIntArray(R.array.color_list)
+        var colorIndex = 0
         for(i in 0..4){
             for(j in 0..5){
+                val drawable = GradientDrawable()
+                drawable.setStroke(1, Color.BLACK)
+                drawable.setColor(Color.WHITE)
                 lecText[j][i] = TextView(this)
                 realm = Realm.getDefaultInstance()
                 val lecture = realm.where<Lecture>().equalTo("youbi", dayToYoubi(i))
@@ -122,6 +128,10 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                     lecText[j][i]?.text = lecture.name + "\n" +
                             "授業数:" + lecture.lectureNum.toString() + "\n" +
                             "出席数:" + lecture.attend.toString()
+                    if(colorList != null)
+                    drawable.setColor(colorList[colorIndex])
+                    colorIndex += 1
+                    if(colorIndex == colorList?.size) colorIndex = 0
                 }
                 lecText[j][i]?.background = drawable
                 lecText[j][i]?.setPadding(10,10,10,10)
