@@ -252,16 +252,8 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             R.id.lectureMenu-> {
                 val realmResults = realm.where(Lecture::class.java)
                     .findAll()
-                    .sort("period")
-                    .sort("youbi")
                 realm.executeTransaction {
-                    if(realmResults != null) {
-                        for (i in 0 until (realmResults.size)) {
-                            if(realmResults[0] != null){
-                                realmResults[0]?.deleteFromRealm()
-                            }
-                        }
-                    }
+                    realmResults.deleteAllFromRealm()
                 }
                 reload()
                 Toast.makeText(applicationContext, "すべての授業を削除しました", Toast.LENGTH_SHORT).show()
