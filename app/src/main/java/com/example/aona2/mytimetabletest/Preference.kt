@@ -4,8 +4,8 @@ import android.content.SharedPreferences
 import android.util.Log
 
 class Preference(private val pref: SharedPreferences) {
-    private val periodNum = 5
-    var periodArray = Array(periodNum + 1) {0}
+    private val periodNum = 6
+    var periodArray = Array(periodNum) {0}
     var schLocation: Pair<String?, String?>  = Pair(null, null)
     var isAlarm: Boolean? = null
 
@@ -13,6 +13,13 @@ class Preference(private val pref: SharedPreferences) {
     private val lng = 139.697453
 
     private var editor: SharedPreferences.Editor = pref.edit()
+
+    private val defaultPeriod1 = 900
+    private val defaultPeriod2 = 1040
+    private val defaultPeriod3 = 1300
+    private val defaultPeriod4 = 1440
+    private val defaultPeriod5 = 1615
+    private val defaultPeriod6 = 1800
 
     init {
         if(isDefault()) putDefaultPref()
@@ -27,12 +34,12 @@ class Preference(private val pref: SharedPreferences) {
 
     //共有プリファレンスに値を保存
     private fun putDefaultPref() {
-        editor.putInt("period1", 900)
-            .putInt("period2", 1040)
-            .putInt("period3", 1300)
-            .putInt("period4", 1440)
-            .putInt("period5", 1615)
-            .putInt("period6", 1800)
+        editor.putInt("period1", defaultPeriod1)
+            .putInt("period2", defaultPeriod2)
+            .putInt("period3", defaultPeriod3)
+            .putInt("period4", defaultPeriod4)
+            .putInt("period5", defaultPeriod5)
+            .putInt("period6", defaultPeriod6)
             .putString("lat", lat.toString())
             .putString("lng", lng.toString())
             .putBoolean("isDefault", false)
@@ -42,12 +49,12 @@ class Preference(private val pref: SharedPreferences) {
     }
 
     fun periodInit(){
-        editor.putInt("period1", 900)
-            .putInt("period2", 1040)
-            .putInt("period3", 1300)
-            .putInt("period4", 1440)
-            .putInt("period5", 1615)
-            .putInt("period6", 1800)
+        editor.putInt("period1", defaultPeriod1)
+            .putInt("period2", defaultPeriod2)
+            .putInt("period3", defaultPeriod3)
+            .putInt("period4", defaultPeriod4)
+            .putInt("period5", defaultPeriod5)
+            .putInt("period6", defaultPeriod6)
             .apply()
     }
 
