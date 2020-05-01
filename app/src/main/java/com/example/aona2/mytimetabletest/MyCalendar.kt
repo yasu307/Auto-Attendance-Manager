@@ -18,7 +18,7 @@ class MyCalendar{
 
     private lateinit var periodArray: Array<Int>
 
-    constructor(){}
+    constructor()
 
     constructor(array : Array<Int>){
         periodArray = array
