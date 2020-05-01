@@ -7,10 +7,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -20,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -45,7 +42,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val halfParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.5f)
     private val linearParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
     private val linearHalfParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
-    private val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
+    //private val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +54,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         realm = Realm.getDefaultInstance()
         setView()
 
-        if(preference.isAlarm?:true) {
+        if(preference.isAlarm != false) {
             setAlarm()
         }
     }
@@ -195,7 +192,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.setting, menu)
         val item = menu?.getItem(0)
-        if(preference.isAlarm?:true){
+        if(preference.isAlarm != false){
             item?.title = "アラームを解除する"
             item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_lock_idle_alarm, null)
         }
@@ -208,7 +205,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         val item = menu?.getItem(0)
-        if(preference.isAlarm?:true) {
+        if(preference.isAlarm != false) {
             item?.title = "アラームを解除する"
             item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_lock_idle_alarm, null)
         }
@@ -222,7 +219,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.alarmMenu -> {
-                if(preference.isAlarm?:true){
+                if(preference.isAlarm != false){
                     preference.putIsAlarm(false)
                     cancelAlarm()
                     invalidateOptionsMenu()

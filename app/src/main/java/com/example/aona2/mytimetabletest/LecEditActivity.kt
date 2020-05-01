@@ -1,9 +1,6 @@
 package com.example.aona2.mytimetabletest
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Intent
-import android.os.Build
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -11,7 +8,6 @@ import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_lec_edit.*
-import java.util.*
 
 //授業コマをタップすると呼び出される
 //授業をrealmに保存する
@@ -29,12 +25,14 @@ class LecEditActivity : AppCompatActivity() {
 
         //そのコマのrealmがあれば取得
         realm = Realm.getDefaultInstance()
-        val lecture = realm.where<Lecture>().equalTo("youbi", youbi).equalTo("period", period).findFirst()
+        var lecture = realm.where<Lecture>().
+            equalTo("youbi", youbi).equalTo("period", period).findFirst()
 
         //TextViewを埋める
-        val days_string = resources?.getStringArray(R.array.Days)
-        if(days_string != null)
-        whenText.setText(days_string[day].toString() + (period+1).toString() + "限")
+        val daysString = resources?.getStringArray(R.array.Days)
+        if(daysString != null)
+        whenText.text = daysString[day].toString() +
+                (period+1).toString() + "限"
         nameEdit.setText(lecture?.name)
 
         //保存ボタン：realmに保存する
@@ -43,14 +41,14 @@ class LecEditActivity : AppCompatActivity() {
                 realm.executeTransaction {
                     val maxId = realm.where<Lecture>().max("id")
                     val nextId = (maxId?.toLong() ?: 0L) + 1L
-                    val lecture = realm.createObject<Lecture>(nextId)
-                    lecture.youbi = youbi
-                    lecture.period = period
-                    lecture.name = nameEdit.text.toString()
+                    lecture = realm.createObject(nextId)
+                    lecture?.youbi = youbi
+                    lecture?.period = period
+                    lecture?.name = nameEdit.text.toString()
                 }
             }else{ //そのコマのrealmがあれば、nameを更新する
                 realm.executeTransaction{
-                    lecture.name = nameEdit.text.toString()
+                    lecture?.name = nameEdit.text.toString()
                 }
             }
             Toast.makeText(applicationContext, "保存しました", Toast.LENGTH_SHORT).show()
@@ -60,8 +58,7 @@ class LecEditActivity : AppCompatActivity() {
         //削除ボタン:そのコマのrealmが存在していれば削除する
         deleteBtn.setOnClickListener {
             realm.executeTransaction{
-                if(lecture != null)
-                    lecture.deleteFromRealm()
+                    lecture?.deleteFromRealm()
             }
             Toast.makeText(applicationContext, "削除しました", Toast.LENGTH_SHORT).show()
             finish()
