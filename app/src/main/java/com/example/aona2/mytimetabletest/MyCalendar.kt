@@ -6,7 +6,7 @@ import io.realm.RealmResults
 import java.util.*
 import kotlin.math.min
 
-class MyCalendar(private val periodArray: Array<Int>) {
+class MyCalendar{
     private val infTime: Long = 1000000000000000
     private val infId = 100
 
@@ -16,7 +16,12 @@ class MyCalendar(private val periodArray: Array<Int>) {
     var nextCalendar: Calendar? = null
     var nextIndex: Int? = null
 
-    init{
+    private lateinit var periodArray: Array<Int>
+
+    constructor(){}
+
+    constructor(array : Array<Int>){
+        periodArray = array
         realmResults = realm.where(Lecture::class.java)
             .findAll()
             .sort("period")
@@ -107,4 +112,19 @@ class MyCalendar(private val periodArray: Array<Int>) {
         calendar.add(Calendar.MINUTE, minutes)
         nextCalendar = calendar
     }
+
+    //実際に使用する
+    fun dayToYoubi(day: Int): Int{
+        val youbi = day + 2
+        if(youbi == 8) return 1
+        else return youbi
+    }
+
+    /*
+       //デバッグ用
+       private fun dayToYoubi(day: Int): Int{
+           return day + 1
+       }
+
+     */
 }

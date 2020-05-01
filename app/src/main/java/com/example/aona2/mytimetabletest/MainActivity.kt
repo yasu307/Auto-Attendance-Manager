@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                 drawable.setColor(Color.WHITE)
                 lecText[j][i] = TextView(this)
                 realm = Realm.getDefaultInstance()
-                val lecture = realm.where<Lecture>().equalTo("youbi", dayToYoubi(i))
+                val lecture = realm.where<Lecture>().equalTo("youbi", MyCalendar().dayToYoubi(i))
                     .equalTo("period", j).findFirst()
                 if(lecture != null) {
                     lecText[j][i]?.text = lecture.name + "\n" +
@@ -147,21 +147,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             }
         }
     }
-
-//実際に使用する
-    private fun dayToYoubi(day: Int): Int{
-        val youbi = day + 2
-        if(youbi == 8) return 1
-        else return youbi
-    }
-
- /*
-    //デバッグ用
-    private fun dayToYoubi(day: Int): Int{
-        return day + 1
-    }
-
-  */
 
     override fun onRestart() {
         super.onRestart()

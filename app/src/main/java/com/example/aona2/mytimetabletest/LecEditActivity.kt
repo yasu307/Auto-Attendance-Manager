@@ -25,7 +25,7 @@ class LecEditActivity : AppCompatActivity() {
         //どのコマから遷移してきたかを取得
         val period = intent.getIntExtra("period", 0)
         val day = intent.getIntExtra("day", 0)
-        val youbi = dayToYoubi(day)
+        val youbi = MyCalendar().dayToYoubi(day)
 
         //そのコマのrealmがあれば取得
         realm = Realm.getDefaultInstance()
@@ -67,21 +67,6 @@ class LecEditActivity : AppCompatActivity() {
             finish()
         }
     }
-
-    //実際に使用する
-    private fun dayToYoubi(day: Int): Int{
-        val youbi = day + 2
-        if(youbi == 8) return 1
-        else return youbi
-    }
-
-    /*
-       //デバッグ用
-       private fun dayToYoubi(day: Int): Int{
-           return day + 1
-       }
-
-     */
 
     override fun onDestroy() {
         super.onDestroy()
