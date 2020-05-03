@@ -12,14 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PeriodActivity"></activity>
+        <service android:name=".AttendService" />
         <activity android:name=".SchoolLocationActivity" />
         <activity android:name=".AttendActivity" />
         <activity android:name=".LecEditActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -4,8 +4,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -44,6 +46,8 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val linearHalfParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
     //private val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
 
+    private val MY_PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -55,7 +59,10 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         setView()
 
         if(preference.isAlarm != false) {
-            setAlarm()
+            if(Build.VERSION.SDK_INT >= 23){
+                if(CheckPermission(this).checkPermission()) setAlarm()
+            }
+            else setAlarm();
         }
     }
 
@@ -169,13 +176,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private fun setAlarm(){
         val alarm = Alarm(preference.periodArray)
         //デバッグ用　2分後にアラームを設定する
-        //alarm.minAfter(2)
+        alarm.minAfter(1)
 
-        val notifyIntent = Intent(this, AttendActivity::class.java).apply {
+        val notifyIntent = Intent(this, AttendService::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         notifyIntent.putExtra("index", alarm.myCalendar.nextIndex)
-        notifyPendingIntent = PendingIntent.getActivity(
+        notifyPendingIntent = PendingIntent.getService(
             this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
@@ -259,5 +266,21 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         preference.putPeriod(timePickerIndex?:0, hourOfDay, minute)
         reload()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions:
+    Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            MY_PERMISSION_REQUEST_ACCESS_FINE_LOCATION->{
+                if (permissions.isNotEmpty() && grantResults[0] == PackageManager.
+                    PERMISSION_GRANTED) {
+                    // 許可された
+                    setAlarm()
+                } else {
+                    Toast.makeText(applicationContext, "アラームはセット出来ませんでした", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }
