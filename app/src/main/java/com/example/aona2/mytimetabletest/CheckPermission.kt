@@ -2,7 +2,6 @@ package com.example.aona2.mytimetabletest
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -39,8 +38,4 @@ class CheckPermission(private val context: Activity) {
                 MY_PERMISSION_REQUEST_ACCESS_FINE_LOCATION)
         }
     }
-
-
-
-
 }

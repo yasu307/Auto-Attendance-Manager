@@ -1,12 +1,13 @@
 package com.example.aona2.mytimetabletest
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 
 class Alarm {
     var myCalendar: MyCalendar
 
-    constructor(periodArray: Array<Int>){
+    constructor(periodArray: Array<Int>, activity: Activity){
         myCalendar = MyCalendar(periodArray)
         myCalendar.nextTimeLec()
     }
