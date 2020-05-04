@@ -8,6 +8,7 @@ import android.location.Location
 import android.os.IBinder
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -30,6 +31,15 @@ class AttendService : Service(){
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("onstart", "onstart")
+
+        val notification = NotificationCompat.Builder(this, "test").apply {
+            setContentTitle("通知のタイトル")
+            setContentText("通知の内容")
+            setSmallIcon(R.mipmap.ic_launcher)
+        }.build()
+        startForeground(1, notification)
+
+
         index = intent?.getIntExtra("index", 0)?:0
         Log.d("index", index.toString())
 
@@ -75,7 +85,7 @@ class AttendService : Service(){
     //アラームをセットする
     private fun setAlarm(){
         val alarm = Alarm(preference.periodArray, index)
-        alarm.minAfter(1)
+        //alarm.minAfter(1)
         val notifyIntent = Intent(this, AttendService::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }

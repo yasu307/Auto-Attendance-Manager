@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             periodText[i]?.background = drawable
             periodText[i]?.tag = i
             periodText[i]?.setOnClickListener {
-                val timePickerFragment = TimePickerFragment(12, 0, this)
+                val timePickerFragment = TimePickerFragment(this, preference, i)
                 timePickerIndex = it.tag.toString().toInt()
                 timePickerFragment.show(supportFragmentManager, "timePicker")
             }
@@ -176,13 +176,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private fun setAlarm(){
         val alarm = Alarm(preference.periodArray)
         //デバッグ用　2分後にアラームを設定する
-        alarm.minAfter(1)
+        //alarm.minAfter(1)
 
         val notifyIntent = Intent(this, AttendService::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         notifyIntent.putExtra("index", alarm.myCalendar.nextIndex)
-        notifyPendingIntent = PendingIntent.getService(
+        notifyPendingIntent = PendingIntent.getForegroundService(
             this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager

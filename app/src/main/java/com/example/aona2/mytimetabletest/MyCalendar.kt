@@ -113,7 +113,7 @@ class MyCalendar{
         nextCalendar = calendar
     }
 
-    /*
+
     //実際に使用する
     fun dayToYoubi(day: Int): Int{
         val youbi = day + 2
@@ -121,12 +121,14 @@ class MyCalendar{
         else return youbi
     }
 
-     */
 
+/*
        //デバッグ用
        fun dayToYoubi(day: Int): Int{
            return day + 1
        }
+
+ */
 
 
 }
