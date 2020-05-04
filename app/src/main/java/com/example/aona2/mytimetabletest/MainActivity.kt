@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private lateinit var realm: Realm
 
     private lateinit var preference: Preference
-    private lateinit var alarmManager: AlarmManager
-    private lateinit var notifyPendingIntent: PendingIntent
+
+    private lateinit var alarm: Alarm
 
     private var timePickerIndex: Int? = null
 
@@ -174,25 +174,14 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
     //アラームをセットする
     private fun setAlarm(){
-        val alarm = Alarm(preference.periodArray)
+        alarm = Alarm(preference.periodArray, this)
         //デバッグ用　2分後にアラームを設定する
         //alarm.minAfter(1)
-
-        val notifyIntent = Intent(this, AttendService::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        notifyIntent.putExtra("index", alarm.myCalendar.nextIndex)
-        notifyPendingIntent = PendingIntent.getForegroundService(
-            this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-
-        alarm.setAlarm(alarmManager, notifyPendingIntent)
         Toast.makeText(applicationContext, "出席管理をセットしました", Toast.LENGTH_SHORT).show()
     }
 
     private fun cancelAlarm(){
-        alarmManager.cancel(notifyPendingIntent)
+        alarm.cancelAlarm()
         Toast.makeText(applicationContext, "出席管理を解除しました", Toast.LENGTH_SHORT).show()
     }
 

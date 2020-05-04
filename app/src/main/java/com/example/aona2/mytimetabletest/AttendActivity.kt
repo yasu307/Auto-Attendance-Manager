@@ -41,6 +41,7 @@ class AttendActivity : AppCompatActivity() {
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
         )
         setContentView(R.layout.activity_attend)
+        /*
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         preference = Preference(pref)
@@ -58,11 +59,13 @@ class AttendActivity : AppCompatActivity() {
         checkPermission()
 
         setAlarm()
+        */
     }
+    /*
 
     //アラームをセットする
     private fun setAlarm(){
-        val alarm = Alarm(preference.periodArray, index)
+        val alarm = Alarm(preference.periodArray, index, this)
         val notifyIntent = Intent(this, AttendActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -212,4 +215,6 @@ class AttendActivity : AppCompatActivity() {
         val toast = Toast.makeText(this, msg, Toast.LENGTH_LONG)
         toast.show()
     }
+
+     */
 }

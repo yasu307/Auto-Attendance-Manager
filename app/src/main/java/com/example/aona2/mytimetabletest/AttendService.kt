@@ -28,7 +28,6 @@ class AttendService : Service(){
     private var lat: Double? = null
     private var lng: Double? = null
 
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("onstart", "onstart")
 
@@ -38,7 +37,6 @@ class AttendService : Service(){
             setSmallIcon(R.mipmap.ic_launcher)
         }.build()
         startForeground(1, notification)
-
 
         index = intent?.getIntExtra("index", 0)?:0
         Log.d("index", index.toString())
@@ -84,17 +82,8 @@ class AttendService : Service(){
 
     //アラームをセットする
     private fun setAlarm(){
-        val alarm = Alarm(preference.periodArray, index)
+        val alarm = Alarm(preference.periodArray, index, this)
         //alarm.minAfter(1)
-        val notifyIntent = Intent(this, AttendService::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        notifyIntent.putExtra("index", alarm.myCalendar.nextIndex)
-        val notifyPendingIntent = PendingIntent.getService(
-            this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val alarmManager : AlarmManager = getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
-        alarm.setAlarm(alarmManager, notifyPendingIntent)
     }
 
     private fun changeRealm(string: String){
