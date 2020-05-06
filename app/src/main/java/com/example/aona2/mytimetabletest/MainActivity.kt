@@ -186,19 +186,16 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.setting, menu)
-        val item = menu?.getItem(0)
-        if(preference.isAlarm != false){
-            item?.title = "アラームを解除する"
-            item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_lock_idle_alarm, null)
-        }
-        else{
-            item?.title = "アラームをセットする"
-            item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_delete, null)
-        }
+        setAlarmMenu(menu)
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        setAlarmMenu(menu)
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    private fun setAlarmMenu(menu: Menu?){
         val item = menu?.getItem(0)
         if(preference.isAlarm != false) {
             item?.title = "アラームを解除する"
@@ -208,7 +205,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             item?.title = "アラームをセットする"
             item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_delete, null)
         }
-        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
