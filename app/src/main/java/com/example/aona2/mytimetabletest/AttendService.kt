@@ -18,7 +18,7 @@ class AttendService : Service(){
     private lateinit var realm: Realm
     private var realmResults: RealmResults<Lecture>? = null
 
-    private val limitDistance = 1 //学校の位置からnkmの位置にいれば出席とする
+    private val limitDistance = 1.0 //学校の位置からnkmの位置にいれば出席とする
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("onstart", "onstart")
@@ -49,7 +49,7 @@ class AttendService : Service(){
                 val lecture = rResults[index]
                 if (lecture != null) {
                     incrementLec(lecture)
-                    if (checkAttend()) incrementAttend(lecture)
+                    checkAttend(lecture)
                 }
             }
         }
@@ -58,8 +58,7 @@ class AttendService : Service(){
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun checkAttend(): Boolean{
-        var isAttend = false
+    private fun checkAttend(lecture: Lecture){
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         fusedLocationClient.lastLocation
@@ -77,7 +76,9 @@ class AttendService : Service(){
                 if(lastlat != null && lastlng != null && lat != null && lng != null ){
                     val distance = getDistance(lat, lng, lastlat, lastlng)
                     Log.d("distance", distance.toString())
-                    if(distance < limitDistance) isAttend = true
+                    if(distance < limitDistance){
+                        incrementAttend(lecture)
+                    }
                 }else{
                     Log.d("AttendService", "lat or lng is null")
                 }
@@ -86,7 +87,6 @@ class AttendService : Service(){
             .addOnFailureListener {
                 Log.d("AttendService", "fail to get location")
             }
-        return isAttend
     }
 
     //アラームをセットする
