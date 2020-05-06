@@ -48,12 +48,8 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         realm = Realm.getDefaultInstance()
         setView()
 
-        if(preference.isAlarm != false) {
-            if(Build.VERSION.SDK_INT >= 23){
-                if(CheckPermission(this).checkPermission()) setAlarm()
-            }
-            else setAlarm();
-        }
+        if(preference.isAlarm != false)
+            if(CheckPermission(this).checkPermission()) setAlarm()
     }
 
     private fun setView(){

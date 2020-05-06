@@ -45,19 +45,6 @@ class Alarm {
             alarmManager.setAlarmClock(
                 AlarmManager.AlarmClockInfo(alarmTimeMillis, null), notifyPendingIntent
             )
-
-            /* LOLIPOP以下のバージョンをサポートする場合
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                alarmManager.setAlarmClock(
-                    AlarmManager.AlarmClockInfo(alarmTimeMillis, null), intent
-                )
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTimeMillis, intent)
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, alarmTimeMillis, intent)
-            }
-
-             */
         }
         myCalendar.logCalendar(myCalendar.nextCalendar, "nextCalendar")
     }
