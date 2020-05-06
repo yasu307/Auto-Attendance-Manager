@@ -30,5 +30,10 @@ class SchoolLocationActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        initBtn.setOnClickListener {
+            latEdit.setText(preference.defaultLat.toString())
+            lngEdit.setText(preference.defaultLng.toString())
+        }
     }
 }

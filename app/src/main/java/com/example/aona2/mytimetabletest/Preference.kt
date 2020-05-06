@@ -10,8 +10,13 @@ class Preference(private val pref: SharedPreferences) {
 
     private var editor: SharedPreferences.Editor = pref.edit()
 
-    private val defaultLat = 35.531371
-    private val defaultLng = 139.697453
+    //AVDの初期位置 google本社？
+    val defaultLat = 37.421998
+    val defaultLng = -122.084000
+
+    //電気通信大学
+    //private val defaultLat = 35.657597
+    //private val defaultLng = 139.543641
 
     private val defaultPeriod1 = 900
     private val defaultPeriod2 = 1040
@@ -64,7 +69,7 @@ class Preference(private val pref: SharedPreferences) {
 
     fun putLocation(location:Pair<String, String>){
         editor.putString("lat", location.first)
-            .putString("lng", location.first)
+            .putString("lng", location.second)
             .apply()
     }
 
