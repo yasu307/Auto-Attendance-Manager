@@ -41,7 +41,7 @@ class Alarm {
 
         val alarmTimeMillis: Long? = myCalendar.nextCalendar?.timeInMillis
         if(alarmTimeMillis != null){
-            Log.d("setAlarm", "setAlarm")
+            Log.d("Alarm", "setAlarm")
             alarmManager.setAlarmClock(
                 AlarmManager.AlarmClockInfo(alarmTimeMillis, null), notifyPendingIntent
             )

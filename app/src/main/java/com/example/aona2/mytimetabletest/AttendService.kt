@@ -33,7 +33,6 @@ class AttendService : Service(){
 
         //出席チェック中の授業のrealmのindexを取得する
         val index = intent?.getIntExtra("index", 0)
-        Log.d("index", index.toString())
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         preference = Preference(pref)
