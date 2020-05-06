@@ -5,8 +5,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -20,6 +20,7 @@ import androidx.preference.PreferenceManager
 import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val lecText = Array(6) { arrayOfNulls<TextView?>(5)}
@@ -85,7 +86,12 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         for(i in 0..5) {
             periodText[i] = TextView(this)
             val time = preference.periodArray[i]
-            periodText[i]?.text = (i+1).toString() + "限\n" + (time/100).toString() + "時\n" + (time%100).toString() + "分"
+            val cal = Calendar.getInstance()
+            cal.set(Calendar.HOUR_OF_DAY, time / 100)
+            cal.set(Calendar.MINUTE, time % 100)
+            val testDate = DateFormat.format("HH:mm", cal)
+            periodText[i]?.text = testDate
+            periodText[i]?.text = (i+1).toString() + "限\n" + testDate
             periodText[i]?.setPadding(10,10,10,10)
             periodText[i]?.layoutParams = params
             periodText[i]?.background = drawable
