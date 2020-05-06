@@ -18,6 +18,8 @@ class AttendService : Service(){
     private lateinit var realm: Realm
     private var realmResults: RealmResults<Lecture>? = null
 
+    private val limitDistance = 1 //学校の位置からnkmの位置にいれば出席とする
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("onstart", "onstart")
 
@@ -76,7 +78,7 @@ class AttendService : Service(){
                 if(lastlat != null && lastlng != null && lat != null && lng != null ){
                     val distance = getDistance(lat, lng, lastlat, lastlng)
                     Log.d("distance", distance.toString())
-                    if(distance < 0.5) isAttend = true
+                    if(distance < limitDistance) isAttend = true
                 }else{
                     Log.d("AttendService", "lat or lng is null")
                 }
