@@ -13,8 +13,8 @@ class MyCalendar{
     private var realm: Realm = Realm.getDefaultInstance()
     private var realmResults: RealmResults<Lecture>? = null
 
-    var nextCalendar: Calendar? = null
-    var nextIndex: Int? = null
+    var nextCalendar: Calendar? = null //次にある授業の日程
+    var nextIndex: Int? = null //次にある授業のrealm上のindex
 
     private lateinit var periodArray: Array<Int>
 
@@ -28,9 +28,9 @@ class MyCalendar{
             .sort("youbi")
     }
 
-    fun nextTimeLec() {
+    //現在時間から次の授業を探す
+    fun findFromTime() {
         val now: Calendar = Calendar.getInstance()
-        logCalendar(now, "now")
 
         var minTime: Long = infTime
         var minIndex: Int = infId
@@ -48,7 +48,7 @@ class MyCalendar{
 
                 val diffTime = calendar.timeInMillis - now.timeInMillis
                 if (diffTime < minTime) {
-                    if (lecture != null) minIndex = i
+                    minIndex = i
                     minCal = calendar
                     minTime = min(diffTime, minTime)
                 }
@@ -58,35 +58,44 @@ class MyCalendar{
         nextIndex = minIndex
     }
 
-    fun nextIdLec(index: Int){
+    //授業のindexから次の授業を探す
+    fun findFromId(index: Int){
         val calendar: Calendar = Calendar.getInstance()
-        nextIndex = index + 1
+        var tmpIndex = index + 1
 
         val rResults = realmResults
 
         if(rResults != null) {
-            if (nextIndex == rResults.size) nextIndex = 0
-            val lecture = rResults[nextIndex?:0]
+            if (tmpIndex == rResults.size) tmpIndex = 0
+            val lecture = rResults[tmpIndex]
             if (lecture != null) {
                 nextCalendar = lecToCal(lecture, calendar)
             }
         }
+        nextIndex = tmpIndex
     }
 
+    //ある授業の情報からその授業が次にいつあるかを返す
     private fun lecToCal(lecture: Lecture, now: Calendar): Calendar {
         val calendar: Calendar = Calendar.getInstance()
 
         val hourMinute = now.get(Calendar.HOUR_OF_DAY) * 100 + now.get(Calendar.MINUTE)
         val youbi = now.get(Calendar.DAY_OF_WEEK)
 
+        //日にちの設定　少し複雑
+        //今日よりも授業のほうが後の曜日
         if (lecture.youbi > youbi)
             calendar.add(Calendar.DAY_OF_MONTH, (lecture.youbi - youbi))
+        //今日よりも授業のほうが前の曜日
         else if (lecture.youbi < youbi)
             calendar.add(Calendar.DAY_OF_MONTH, (lecture.youbi - youbi + 7))
+        //今日と授業が同じ曜日
+        //今の時間より授業が前の時間なら来週なので7日増やす
         else {
             if (periodArray[(lecture.period)] < hourMinute)
                 calendar.add(Calendar.DAY_OF_MONTH, 7)
         }
+        //時間を設定する　登録してある内容をそのまま設定する
         calendar.set(Calendar.HOUR_OF_DAY, periodArray[lecture.period] / 100)
         calendar.set(Calendar.MINUTE, periodArray[lecture.period] % 100)
         calendar.set(Calendar.SECOND, 0)
@@ -94,6 +103,7 @@ class MyCalendar{
         return calendar
     }
 
+    //Calendarのlogを出力する
     fun logCalendar(calendar: Calendar?, string: String){
         if(calendar != null) {
             Log.d("Calendar name", string)
@@ -107,12 +117,12 @@ class MyCalendar{
         }
     }
 
+    //現在時間からn分後のカレンダーをセットする
     fun minAfter(minutes: Int){
         val calendar: Calendar = Calendar.getInstance()
         calendar.add(Calendar.MINUTE, minutes)
         nextCalendar = calendar
     }
-
 
     //実際に使用する
     fun dayToYoubi(day: Int): Int{
@@ -123,11 +133,10 @@ class MyCalendar{
 
 
 /*
-       //デバッグ用
+       //土曜日日曜日にデバッグしたいときに使う
        fun dayToYoubi(day: Int): Int{
            return day + 1
        }
-
  */
 
 

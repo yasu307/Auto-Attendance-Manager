@@ -1,7 +1,5 @@
 package com.example.aona2.mytimetabletest
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -31,20 +29,12 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private var textView: TextView? = null
 
     private lateinit var realm: Realm
-
     private lateinit var preference: Preference
-
     private lateinit var alarm: Alarm
 
-    private var timePickerIndex: Int? = null
+    private var timePickerIndex = -1
 
     private val drawable = GradientDrawable()
-    //レイアウトパラメータの宣言
-    private val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f)
-    private val halfParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.5f)
-    private val linearParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
-    private val linearHalfParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
-    //private val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
 
     private val MY_PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1
 
@@ -67,6 +57,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     }
 
     private fun setView(){
+        //レイアウトパラメータの宣言
+        val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f)
+        val halfParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.5f)
+        val linearParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f)
+        val linearHalfParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
+        //private val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
+
         //外枠の設定
         drawable.setStroke(1, Color.BLACK)
         drawable.setColor(Color.WHITE)
@@ -128,7 +125,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                 realm = Realm.getDefaultInstance()
                 val lecture = realm.where<Lecture>().equalTo("youbi", MyCalendar().dayToYoubi(i))
                     .equalTo("period", j).findFirst()
-                if(lecture != null) {
+                if(lecture != null) {                //授業が存在している場合の処理
                     lecText[j][i]?.text = lecture.name + "\n" +
                             "授業数:" + lecture.lectureNum.toString() + "\n" +
                             "出席数:" + lecture.attend.toString()
@@ -175,7 +172,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     //アラームをセットする
     private fun setAlarm(){
         alarm = Alarm(preference.periodArray, this)
-        //デバッグ用　2分後にアラームを設定する
+        //デバッグ用　n分後にアラームを設定する
         //alarm.minAfter(1)
         Toast.makeText(applicationContext, "出席管理をセットしました", Toast.LENGTH_SHORT).show()
     }
@@ -251,12 +248,15 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         return super.onOptionsItemSelected(item)
     }
 
-
+    //timePickerFragmentのlistener
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
-        preference.putPeriod(timePickerIndex?:0, hourOfDay, minute)
-        reload()
+        if(timePickerIndex != -1){
+            preference.putPeriod(timePickerIndex, hourOfDay, minute)
+            reload()
+        }
     }
 
+    //requestLocationPermissionのlistener
     override fun onRequestPermissionsResult(requestCode: Int, permissions:
     Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

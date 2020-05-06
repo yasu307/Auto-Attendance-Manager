@@ -1,14 +1,11 @@
 package com.example.aona2.mytimetabletest
 
-import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 
 class Alarm {
     var myCalendar: MyCalendar
@@ -19,20 +16,19 @@ class Alarm {
 
     constructor(periodArray: Array<Int>, Context: Context){
         myCalendar = MyCalendar(periodArray)
-        myCalendar.nextTimeLec()
+        myCalendar.findFromTime()
         context = Context
         setAlarm()
     }
 
-    constructor(periodArray: Array<Int>, index: Int?, Context: Context){
+    constructor(periodArray: Array<Int>, index: Int, Context: Context){
         myCalendar = MyCalendar(periodArray)
-        if(index != null)
-        myCalendar.nextIdLec(index)
+        myCalendar.findFromId(index)
         context = Context
         setAlarm()
     }
 
-    fun setAlarm(){
+    private fun setAlarm(){
         val notifyIntent = Intent(context, AttendService::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -40,6 +36,7 @@ class Alarm {
         notifyPendingIntent = PendingIntent.getForegroundService(
             context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
+
         alarmManager = context.getSystemService(AppCompatActivity.ALARM_SERVICE) as AlarmManager
 
         val alarmTimeMillis: Long? = myCalendar.nextCalendar?.timeInMillis

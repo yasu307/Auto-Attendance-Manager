@@ -8,7 +8,6 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import io.realm.Realm
 import io.realm.RealmResults
@@ -19,24 +18,19 @@ class AttendService : Service(){
     private lateinit var realm: Realm
     private var realmResults: RealmResults<Lecture>? = null
 
-    private var index = -1
-
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    private var lat: Double? = null
-    private var lng: Double? = null
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("onstart", "onstart")
 
+        //通知を表示
         val notification = NotificationCompat.Builder(this, "test").apply {
-            setContentTitle("通知のタイトル")
-            setContentText("通知の内容")
+            setContentTitle("Timetable app")
+            setContentText("出席をチェックしています")
             setSmallIcon(R.mipmap.ic_launcher)
         }.build()
         startForeground(1, notification)
 
-        index = intent?.getIntExtra("index", 0)?:0
+        //出席チェック中の授業のrealmのindexを取得する
+        val index = intent?.getIntExtra("index", 0)
         Log.d("index", index.toString())
 
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
@@ -48,7 +42,24 @@ class AttendService : Service(){
             .sort("period")
             .sort("youbi")
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        val rResults = realmResults
+        if(rResults != null) {
+            if(index != null) {
+                val lecture = rResults[index]
+                if (lecture != null) {
+                    incrementLec(lecture)
+                    if (checkAttend()) incrementAttend(lecture)
+                }
+            }
+        }
+        if(index != null) setAlarm(index)
+
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun checkAttend(): Boolean{
+        var isAttend = false
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location : Location? ->
@@ -56,53 +67,50 @@ class AttendService : Service(){
                 Log.d("lastlocation", location?.latitude.toString())
                 Log.d("lastlocation", location?.longitude.toString())
 
-                val lastlat : Double = location?.latitude?:0.0
-                val lastlng : Double = location?.longitude?:0.0
+                val lastlat : Double? = location?.latitude
+                val lastlng : Double? = location?.longitude
 
-                val lat: Double = preference.schLocation.first?.toDouble() ?: 0.0
-                val lng: Double = preference.schLocation.first?.toDouble() ?: 0.0
+                val lat: Double? = preference.schLocation.first?.toDouble()
+                val lng: Double? = preference.schLocation.second?.toDouble()
 
-                val distance = getDistance(lat, lng, lastlat, lastlng)
-                Log.d("distance", distance.toString())
-                changeRealm("lectureNum")
-                if(distance < 0.5) changeRealm("attend")
-                realmShowIndex()
+                if(lastlat != null && lastlng != null && lat != null && lng != null ){
+                    val distance = getDistance(lat, lng, lastlat, lastlng)
+                    Log.d("distance", distance.toString())
+                    if(distance < 0.5) isAttend = true
+                }else{
+                    Log.d("AttendService", "lat or lng is null")
+                }
             }
         fusedLocationClient.lastLocation
             .addOnFailureListener {
-                Log.d("fail", "fail")
+                Log.d("AttendService", "fail to get location")
             }
-
-        setAlarm()
-
-        return super.onStartCommand(intent, flags, startId)
+        return isAttend
     }
 
     //アラームをセットする
-    private fun setAlarm(){
+    private fun setAlarm(index: Int){
         val alarm = Alarm(preference.periodArray, index, this)
         //alarm.minAfter(1)
     }
 
-    private fun changeRealm(string: String){
-        val rResults = realmResults
-        if(rResults != null) {
-            val lecture = rResults[index]
-            if(lecture != null) {
-                realm.executeTransaction {
-                    if (string == "lectureNum") {
-                        lecture.lectureNum = lecture.lectureNum + 1
-                        Log.d("changeRealm","lectureNum")
-                    }
-                    else if (string == "attend"){
-                        lecture.attend = lecture.attend + 1
-                        Log.d("changeRealm","attend")
-                    }
-                }
-            }
+    //lectureNumに1を足す
+    private fun incrementLec(lecture: Lecture){
+         realm.executeTransaction {
+             lecture.lectureNum++
+             Log.d("changeRealm","lectureNum")
+         }
+    }
+
+    //attendに1を足す
+    private fun incrementAttend(lecture: Lecture){
+        realm.executeTransaction {
+            lecture.attend++
+            Log.d("changeRealm","attend")
         }
     }
 
+    //realmに保存してあるすべての授業の値をログに表示する
     private fun realmShowIndex(){
         val rResults = realmResults
         if(rResults != null) {
@@ -121,6 +129,7 @@ class AttendService : Service(){
         }
     }
 
+    //距離の計算に使用
     private fun getDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val theta = lon1 - lon2
         var dist =
@@ -133,10 +142,12 @@ class AttendService : Service(){
         return miles * 1.609344
     }
 
+    //距離の計算に使用
     private fun rad2deg(radian: Double): Double {
         return radian * (180f / Math.PI)
     }
 
+    //距離の計算に使用
     fun deg2rad(degrees: Double): Double {
         return degrees * (Math.PI / 180f)
     }

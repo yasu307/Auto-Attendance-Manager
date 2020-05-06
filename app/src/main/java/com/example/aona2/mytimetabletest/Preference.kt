@@ -1,7 +1,6 @@
 package com.example.aona2.mytimetabletest
 
 import android.content.SharedPreferences
-import android.util.Log
 
 class Preference(private val pref: SharedPreferences) {
     private val periodNum = 6
@@ -9,10 +8,10 @@ class Preference(private val pref: SharedPreferences) {
     var schLocation: Pair<String?, String?>  = Pair(null, null)
     var isAlarm: Boolean? = null
 
-    private val lat = 35.531371
-    private val lng = 139.697453
-
     private var editor: SharedPreferences.Editor = pref.edit()
+
+    private val defaultLat = 35.531371
+    private val defaultLng = 139.697453
 
     private val defaultPeriod1 = 900
     private val defaultPeriod2 = 1040
@@ -40,12 +39,11 @@ class Preference(private val pref: SharedPreferences) {
             .putInt("period4", defaultPeriod4)
             .putInt("period5", defaultPeriod5)
             .putInt("period6", defaultPeriod6)
-            .putString("lat", lat.toString())
-            .putString("lng", lng.toString())
+            .putString("lat", defaultLat.toString())
+            .putString("lng", defaultLng.toString())
             .putBoolean("isDefault", false)
             .putBoolean("isAlarm", true)
             .apply()
-        //Log.d("preference","putDefaultPref")
     }
 
     fun periodInit(){
@@ -59,8 +57,8 @@ class Preference(private val pref: SharedPreferences) {
     }
 
     fun locationInit(){
-        editor.putString("lat", lat.toString())
-            .putString("lng", lng.toString())
+        editor.putString("lat", defaultLat.toString())
+            .putString("lng", defaultLng.toString())
             .apply()
     }
 
@@ -95,7 +93,6 @@ class Preference(private val pref: SharedPreferences) {
         for(i in 0 until periodNum){
             val string = "period" + (i+1).toString()
             periodArray[i] = pref.getInt(string, 0)
-            Log.d("period", periodArray[i].toString())
         }
     }
 
