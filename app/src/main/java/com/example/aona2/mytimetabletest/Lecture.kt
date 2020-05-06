@@ -11,5 +11,4 @@ open class Lecture : RealmObject(){
     var name: String = ""
     var lectureNum: Int = 0
     var attend: Int = 0
-
 }

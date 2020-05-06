@@ -1,13 +1,11 @@
 package com.example.aona2.mytimetabletest
 
-import android.app.AlarmManager
-import android.app.PendingIntent
+
 import android.app.Service
 import android.content.Intent
 import android.location.Location
 import android.os.IBinder
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.preference.PreferenceManager
 import com.google.android.gms.location.FusedLocationProviderClient
