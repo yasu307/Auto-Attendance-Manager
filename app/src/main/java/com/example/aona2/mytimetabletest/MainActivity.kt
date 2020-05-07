@@ -127,7 +127,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         for(i in 0..4){
             daysText[i] = TextView(this)
             if(daysString != null) daysText[i]?.text = daysString[i]
-            daysText[i]?.setPadding(10,10,10,10)
+            daysText[i]?.textSize = 20.0f
+            daysText[i]?.gravity = Gravity.CENTER
+            //daysText[i]?.setPadding(10,10,10,10)
             daysText[i]?.layoutParams = halfParams
             daysText[i]?.background = drawable
             linearArray[i+1]?.addView(daysText[i])
@@ -154,8 +156,12 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                     colorIndex += 1
                     if(colorIndex == colorList?.size) colorIndex = 0
                 }
+                lecText[j][i]?.textSize = 13.5f
+                lecText[j][i]?.gravity = Gravity.CENTER
+
                 lecText[j][i]?.background = drawable
-                lecText[j][i]?.setPadding(10,10,10,10)
+                //lecText[j][i]?.setPadding(10,10,10,10)
+
                 lecText[j][i]?.layoutParams = params
                 linearArray[i+1]?.addView(lecText[j][i])
                 //クリックの処理

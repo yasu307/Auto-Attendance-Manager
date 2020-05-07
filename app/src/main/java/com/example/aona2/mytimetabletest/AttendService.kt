@@ -1,9 +1,13 @@
 package com.example.aona2.mytimetabletest
 
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.location.Location
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -23,13 +27,25 @@ class AttendService : Service(){
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("onstart", "onstart")
 
+        val channelId = "com.codechacha.sample1"
+        val channelName = "My service channel"
+        if (Build.VERSION.SDK_INT >= 26) {
+            val channel = NotificationChannel(
+                channelId, channelName,
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            var manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
+
         //通知を表示
-        val notification = NotificationCompat.Builder(this, "test").apply {
+        val notification = NotificationCompat.Builder(this, channelId).apply {
             setContentTitle("Timetable app")
             setContentText("出席をチェックしています")
             setSmallIcon(R.mipmap.ic_launcher)
         }.build()
-        startForeground(1, notification)
+        val NOTIFICATION_ID = 12345
+        startForeground(NOTIFICATION_ID, notification)
 
         //出席チェック中の授業のrealmのindexを取得する
         val index = intent?.getIntExtra("index", 0)
@@ -55,8 +71,12 @@ class AttendService : Service(){
         }
         if(index != null) setAlarm(index)
 
+        stopSelf()
+
         return super.onStartCommand(intent, flags, startId)
     }
+
+
 
     private fun checkAttend(lecture: Lecture){
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
