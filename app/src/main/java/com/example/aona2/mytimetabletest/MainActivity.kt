@@ -180,13 +180,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         }
 
         for(i in 0..5) {
-            changeTextSize(periodTimeText[i])
+            changeTextSize(linearArray[0], periodTimeText[i])
         }
     }
 
-    private fun changeTextSize(textView: TextView?){
-        if(textView != null){
-            val viewWidth = textView.width
+    private fun changeTextSize(linearLayout: LinearLayout?, textView: TextView?){
+        if(textView != null && linearLayout != null){
+            val viewWidth = linearLayout.width
             Log.d("viewWidth", viewWidth.toString())
             val paint = Paint()
             var textSize = textView.textSize
