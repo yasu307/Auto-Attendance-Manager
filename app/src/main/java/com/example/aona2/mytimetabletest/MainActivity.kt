@@ -9,6 +9,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -128,9 +129,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             cal.set(Calendar.MINUTE, time % 100)
             val dateFormat = DateFormat.format("HH:mm", cal)
             periodTimeText[i]?.text = dateFormat
-            periodTimeText[i]?.textSize = 12.0f
+            periodTimeText[i]?.textSize = 30.0f
             periodTimeText[i]?.gravity = Gravity.CENTER
-            periodTimeText[i]?.setPadding(10,10,10,10)
+            //periodTimeText[i]?.setPadding(10,10,10,10)
             periodTimeText[i]?.layoutParams = halfParams
             periodLinear[i]?.addView(periodTimeText[i])
         }
@@ -187,33 +188,55 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             }
         }
 
-        for(i in 0..5) {
-            periodTimeText[i]?.afterMeasured {
-                changeTextSize(periodTimeText[i])
-            }
+        for(k in 0..5) {
+            val viewTreeObserver = periodTimeText[k]?.viewTreeObserver
+            viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    Log.d("onGloballLayout", "onGloballLayout")
+                    Log.d("index", k.toString())
+                    periodTimeText[k]?.setTextSize(TypedValue.COMPLEX_UNIT_PX, changeTextSize(periodTimeText[k]))
+                    periodTimeText[k]?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+                }
+            })
         }
     }
 
-    private fun changeTextSize(textView: TextView?){
+    private fun changeTextSize(textView: TextView?) : Float{
         if(textView != null){
-            val viewWidth = textView.width
-            Log.d("viewWidth", viewWidth.toString())
-            val paint = Paint()
+            // TextViewの横幅
+            val textViewWidth = textView.width
+
+            // TextViewのサイズ
             var textSize = textView.textSize
+
+            val paint = Paint()
+
+            // Paintを使ってTextViewのサイズをセット
             paint.textSize = textSize
+
+            // Paintを使ってテキストの横幅を測定
             var textWidth = paint.measureText(textView.text.toString())
-            while(viewWidth < textWidth){
-                if(MIN_TEXT_SIZE >= textSize){
-                    textSize = MIN_TEXT_SIZE
+
+            // テキストサイズの最小値
+            val min = 1f
+
+            // 横幅が　TextView > テキスト　になるまで実行
+            while (textViewWidth < textWidth) {
+                // テキストのサイズが最小
+                if (min >= textSize) {
+                    textSize = min
                     break
                 }
-                textSize -= 0.5f
+                // TextViewのサイズを小さくする
+                textSize--
                 paint.textSize = textSize
+
+                // テキストの横幅を更新
                 textWidth = paint.measureText(textView.text.toString())
             }
-            Log.d("textSize", textSize.toString())
-            textView.textSize = textSize
+            return textSize
         }
+        return 0f
     }
 
     override fun onRestart() {
