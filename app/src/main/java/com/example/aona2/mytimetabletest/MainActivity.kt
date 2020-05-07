@@ -120,28 +120,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             periodTimeText[i]?.setPadding(10,10,10,10)
             periodTimeText[i]?.layoutParams = halfParams
             periodLinear[i]?.addView(periodTimeText[i])
-
-            /*
-            periodText[i] = TextView(this)
-            val time = preference.periodArray[i]
-            val cal = Calendar.getInstance()
-            cal.set(Calendar.HOUR_OF_DAY, time / 100)
-            cal.set(Calendar.MINUTE, time % 100)
-            val testDate = DateFormat.format("HH:mm", cal)
-            periodText[i]?.text = testDate
-            periodText[i]?.text = (i+1).toString() + "限\n" + testDate
-            periodText[i]?.setPadding(10,10,10,10)
-            periodText[i]?.layoutParams = params
-            periodText[i]?.background = drawable
-            periodText[i]?.tag = i
-            periodText[i]?.setOnClickListener {
-                val timePickerFragment = TimePickerFragment(this, preference, i)
-                timePickerIndex = it.tag.toString().toInt()
-                timePickerFragment.show(supportFragmentManager, "timePicker")
-            }
-            linearArray[0]?.addView(periodText[i])
-
-             */
         }
 
         //1行目:曜日の表示
