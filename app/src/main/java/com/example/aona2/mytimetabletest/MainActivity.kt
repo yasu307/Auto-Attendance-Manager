@@ -9,10 +9,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
-import android.view.Gravity
-import android.view.Menu
-import android.view.MenuItem
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.TimePicker
@@ -24,6 +21,17 @@ import io.realm.Realm
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+
+inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            if (measuredWidth > 0 && measuredHeight > 0) {
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+                f()
+            }
+        }
+    })
+}
 
 class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val lecText = Array(6) { arrayOfNulls<TextView?>(5)}
@@ -180,13 +188,15 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         }
 
         for(i in 0..5) {
-            changeTextSize(linearArray[0], periodTimeText[i])
+            periodTimeText[i]?.afterMeasured {
+                changeTextSize(periodTimeText[i])
+            }
         }
     }
 
-    private fun changeTextSize(linearLayout: LinearLayout?, textView: TextView?){
-        if(textView != null && linearLayout != null){
-            val viewWidth = linearLayout.width
+    private fun changeTextSize(textView: TextView?){
+        if(textView != null){
+            val viewWidth = textView.width
             Log.d("viewWidth", viewWidth.toString())
             val paint = Paint()
             var textSize = textView.textSize
