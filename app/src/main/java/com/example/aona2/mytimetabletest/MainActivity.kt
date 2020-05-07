@@ -4,9 +4,11 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -42,6 +44,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val drawable = GradientDrawable()
 
     private val MY_PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1
+
+    private val MIN_TEXT_SIZE = 10f
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -172,6 +177,32 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                     startActivity(intent)
                 }
             }
+        }
+
+        for(i in 0..5) {
+            changeTextSize(periodTimeText[i])
+        }
+    }
+
+    private fun changeTextSize(textView: TextView?){
+        if(textView != null){
+            val viewWidth = textView.width
+            Log.d("viewWidth", viewWidth.toString())
+            val paint = Paint()
+            var textSize = textView.textSize
+            paint.textSize = textSize
+            var textWidth = paint.measureText(textView.text.toString())
+            while(viewWidth < textWidth){
+                if(MIN_TEXT_SIZE >= textSize){
+                    textSize = MIN_TEXT_SIZE
+                    break
+                }
+                textSize -= 0.5f
+                paint.textSize = textSize
+                textWidth = paint.measureText(textView.text.toString())
+            }
+            Log.d("textSize", textSize.toString())
+            textView.textSize = textSize
         }
     }
 
