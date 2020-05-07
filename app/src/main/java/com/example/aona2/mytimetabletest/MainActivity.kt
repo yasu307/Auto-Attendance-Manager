@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.format.DateFormat
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -24,7 +25,10 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val lecText = Array(6) { arrayOfNulls<TextView?>(5)}
-    private val periodText : Array<TextView?> = arrayOfNulls(6)
+    private val lecLinear = Array(6) { arrayOfNulls<LinearLayout?>(5)}
+    private val periodNumText : Array<TextView?> = arrayOfNulls(6)
+    private val periodTimeText : Array<TextView?> = arrayOfNulls(6)
+    private val periodLinear : Array<LinearLayout?> = arrayOfNulls(6)
     private val daysText : Array<TextView?> = arrayOfNulls(5)
     private val linearArray: Array<LinearLayout?> = arrayOfNulls(6)
     private var textView: TextView? = null
@@ -84,6 +88,40 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         textView?.layoutParams = halfParams
         linearArray[0]?.addView(textView)
         for(i in 0..5) {
+            periodLinear[i] = LinearLayout(this)
+            periodLinear[i]?.orientation = LinearLayout.VERTICAL
+            periodLinear[i]?.layoutParams = params
+            periodLinear[i]?.background = drawable
+            periodLinear[i]?.tag = i
+            periodLinear[i]?.setOnClickListener {
+                val timePickerFragment = TimePickerFragment(this, preference, i)
+                timePickerIndex = it.tag.toString().toInt()
+                timePickerFragment.show(supportFragmentManager, "timePicker")
+            }
+            linearArray[0]?.addView(periodLinear[i])
+
+            periodNumText[i] = TextView(this)
+            periodNumText[i]?.text = (i+1).toString()
+            periodNumText[i]?.textSize = 28.0f
+            periodNumText[i]?.gravity = Gravity.CENTER
+            periodNumText[i]?.setPadding(10,10,10,10)
+            periodNumText[i]?.layoutParams = params
+            periodLinear[i]?.addView(periodNumText[i])
+
+            periodTimeText[i] = TextView(this)
+            val time = preference.periodArray[i]
+            val cal = Calendar.getInstance()
+            cal.set(Calendar.HOUR_OF_DAY, time / 100)
+            cal.set(Calendar.MINUTE, time % 100)
+            val dateFormat = DateFormat.format("HH:mm", cal)
+            periodTimeText[i]?.text = dateFormat
+            periodTimeText[i]?.textSize = 12.0f
+            periodTimeText[i]?.gravity = Gravity.CENTER
+            periodTimeText[i]?.setPadding(10,10,10,10)
+            periodTimeText[i]?.layoutParams = halfParams
+            periodLinear[i]?.addView(periodTimeText[i])
+
+            /*
             periodText[i] = TextView(this)
             val time = preference.periodArray[i]
             val cal = Calendar.getInstance()
@@ -102,6 +140,8 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                 timePickerFragment.show(supportFragmentManager, "timePicker")
             }
             linearArray[0]?.addView(periodText[i])
+
+             */
         }
 
         //1行目:曜日の表示
