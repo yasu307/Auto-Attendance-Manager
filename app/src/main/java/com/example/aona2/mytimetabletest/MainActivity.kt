@@ -67,8 +67,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         realm = Realm.getDefaultInstance()
         setView()
 
-        if(preference.isAlarm != false)
-            if(CheckPermission(this).checkPermission()) setAlarm()
+        checkAlarm()
     }
 
     private fun setView(){
@@ -256,6 +255,11 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         realm.close()
     }
 
+    private fun checkAlarm(){
+        if(preference.isAlarm != false)
+            if(CheckPermission(this).checkPermission()) setAlarm()
+    }
+
     //アラームをセットする
     private fun setAlarm(){
         alarm = Alarm(preference.periodArray, this)
@@ -335,7 +339,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         if(timePickerIndex != -1){
             preference.putPeriod(timePickerIndex, hourOfDay, minute)
-            reload()
+            val time = preference.periodArray[timePickerIndex]
+            val cal = Calendar.getInstance()
+            cal.set(Calendar.HOUR_OF_DAY, time / 100)
+            cal.set(Calendar.MINUTE, time % 100)
+            val dateFormat = DateFormat.format("HH:mm", cal)
+            periodTimeText[timePickerIndex]?.text = dateFormat
+            checkAlarm()
         }
     }
 
