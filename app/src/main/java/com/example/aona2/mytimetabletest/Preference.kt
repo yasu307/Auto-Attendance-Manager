@@ -59,18 +59,21 @@ class Preference(private val pref: SharedPreferences) {
             .putInt("period5", defaultPeriod5)
             .putInt("period6", defaultPeriod6)
             .apply()
+        setPeriod()
     }
 
     fun locationInit(){
         editor.putString("lat", defaultLat.toString())
             .putString("lng", defaultLng.toString())
             .apply()
+        setLocation()
     }
 
     fun putLocation(location:Pair<String, String>){
         editor.putString("lat", location.first)
             .putString("lng", location.second)
             .apply()
+        setLocation()
     }
 
     fun putPeriod(periodIndex: Int, hour: Int, minute: Int){
@@ -78,7 +81,7 @@ class Preference(private val pref: SharedPreferences) {
         val periodString = "period" + (periodIndex+1).toString()
         editor.putInt(periodString, time)
             .apply()
-        periodArray[periodIndex] = time
+        setPeriod()
     }
 
     fun putIsAlarm(IsAlarm: Boolean){

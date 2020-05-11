@@ -317,8 +317,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             }
             R.id.periodMenu -> {
                 preference.periodInit()
-                reload()
+                for(i in 0..5) updatePeriodText(i)
                 Toast.makeText(applicationContext, "授業時間を初期化しました", Toast.LENGTH_SHORT).show()
+                checkAlarm()
                 return true
             }
             R.id.lectureMenu-> {
@@ -339,14 +340,18 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         if(timePickerIndex != -1){
             preference.putPeriod(timePickerIndex, hourOfDay, minute)
-            val time = preference.periodArray[timePickerIndex]
-            val cal = Calendar.getInstance()
-            cal.set(Calendar.HOUR_OF_DAY, time / 100)
-            cal.set(Calendar.MINUTE, time % 100)
-            val dateFormat = DateFormat.format("HH:mm", cal)
-            periodTimeText[timePickerIndex]?.text = dateFormat
+            updatePeriodText(timePickerIndex)
             checkAlarm()
         }
+    }
+
+    private fun updatePeriodText(index:Int){
+        val time = preference.periodArray[index]
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY, time / 100)
+        cal.set(Calendar.MINUTE, time % 100)
+        val dateFormat = DateFormat.format("HH:mm", cal)
+        periodTimeText[index]?.text = dateFormat
     }
 
     //requestLocationPermissionのlistener
