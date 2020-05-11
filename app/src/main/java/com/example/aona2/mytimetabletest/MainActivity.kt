@@ -23,17 +23,6 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
-inline fun <T : View> T.afterMeasured(crossinline f: T.() -> Unit) {
-    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-        override fun onGlobalLayout() {
-            if (measuredWidth > 0 && measuredHeight > 0) {
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
-                f()
-            }
-        }
-    })
-}
-
 class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val lecText = Array(6) { arrayOfNulls<TextView?>(5)}
     private val lecLinear = Array(6) { arrayOfNulls<LinearLayout?>(5)}
