@@ -193,8 +193,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     Log.d("onGloballLayout", "onGloballLayout")
-                    Log.d("index", k.toString())
-                    //Log.d("changeTextSize",changeTextSize(periodTimeText[k]).toString())
                     periodTimeText[k]?.setTextSize(TypedValue.COMPLEX_UNIT_PX, changeTextSize(periodTimeText[k]))
                     periodTimeText[k]?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
                 }
@@ -218,14 +216,8 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             // Paintを使ってテキストの横幅を測定
             var textWidth = paint.measureText(textView.text.toString())
 
-            Log.d("textViewWidth", textViewWidth.toString())
-            Log.d("textWidth", textWidth.toString())
-            Log.d("textSize", textSize.toString())
-
             // 横幅が　TextView > テキスト　になるまで実行
             while (textViewWidth-1.0f < textWidth) {
-                //Log.d("while", textWidth.toString())
-                //Log.d("textSize", textSize.toString())
 
                 // テキストのサイズが最小
                 if (MIN_TEXT_SIZE >= textSize) {
@@ -239,7 +231,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                 // テキストの横幅を更新
                 textWidth = paint.measureText(textView.text.toString())
             }
-            Log.d("textSize",textSize.toString())
             return textSize
         }
         return 0f
