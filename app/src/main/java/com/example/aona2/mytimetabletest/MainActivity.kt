@@ -36,6 +36,8 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
     private var timePickerIndex = -1
 
+    private val drawable = GradientDrawable()
+
     private val MY_PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +61,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         val linearHalfParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
         //private val linearWrapPrams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT, 0.5f)
 
+        drawable.setStroke(1, Color.BLACK)
+        drawable.setColor(Color.WHITE)
+
         //LinearLayoutの設定
         linearArray[0] = LinearLayout(this)
         linearArray[0]?.orientation = LinearLayout.VERTICAL
@@ -72,13 +77,14 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         }
 
         //1列目：時限と時間の表示
-        textView = TextView(ContextThemeWrapper(this, R.style.TextViewStroke))
+        textView = TextView(ContextThemeWrapper(this, R.style.TextView))
         textView?.layoutParams = halfParams
         linearArray[0]?.addView(textView)
         for(i in 0..5) {
-            periodLinear[i] = LinearLayout(ContextThemeWrapper(this, R.style.TextViewStroke))
+            periodLinear[i] = LinearLayout(this)
             periodLinear[i]?.orientation = LinearLayout.VERTICAL
             periodLinear[i]?.layoutParams = params
+            periodLinear[i]?.background = drawable
             periodLinear[i]?.tag = i
             periodLinear[i]?.setOnClickListener {
                 val timePickerFragment = TimePickerFragment(this, preference, i)
@@ -117,7 +123,10 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         var colorIndex = 0
         for(i in 0..4){
             for(j in 0..5){
-                lecText[j][i] = TextView(ContextThemeWrapper(this, R.style.TextViewStroke))
+                val drawable = GradientDrawable()
+                drawable.setStroke(1, Color.BLACK)
+                drawable.setColor(Color.WHITE)
+                lecText[j][i] = TextView(this)
                 realm = Realm.getDefaultInstance()
                 val lecture = realm.where<Lecture>().equalTo("youbi", MyCalendar().dayToYoubi(i))
                     .equalTo("period", j).findFirst()
@@ -125,13 +134,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                     lecText[j][i]?.text = lecture.name + "\n" +
                             "授業数:" + lecture.lectureNum.toString() + "\n" +
                             "出席数:" + lecture.attend.toString()
-                    if(colorList != null)
-                        lecText[j][i]?.setBackgroundColor(colorList[colorIndex])
+                    if(colorList != null) drawable.setColor(colorList[colorIndex])
                     colorIndex += 1
                     if(colorIndex == colorList?.size) colorIndex = 0
                 }
                 lecText[j][i]?.setPadding(10,10,10,10)
                 lecText[j][i]?.layoutParams = params
+                lecText[j][i]?.background = drawable
                 linearArray[i+1]?.addView(lecText[j][i])
 
                 //クリックの処理
