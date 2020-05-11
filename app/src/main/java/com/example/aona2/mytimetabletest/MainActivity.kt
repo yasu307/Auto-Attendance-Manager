@@ -4,12 +4,9 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
-import android.util.TypedValue
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -26,7 +23,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val lecText = Array(6) { arrayOfNulls<TextView?>(5)}
-    private val lecLinear = Array(6) { arrayOfNulls<LinearLayout?>(5)}
     private val periodNumText : Array<TextView?> = arrayOfNulls(6)
     private val periodTimeText : Array<TextView?> = arrayOfNulls(6)
     private val periodLinear : Array<LinearLayout?> = arrayOfNulls(6)
@@ -122,10 +118,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         //1行目:曜日の表示
         val daysString = resources?.getStringArray(R.array.Days)
         for(i in 0..4){
-            daysText[i] = TextView(this,null, R.attr.customAttr, R.style.CustomStyle1)
+            daysText[i] = TextView(ContextThemeWrapper(this, R.style.CustomStyle1))
             if(daysString != null) daysText[i]?.text = daysString[i]
 
-            daysText[i]?.gravity = Gravity.CENTER
             daysText[i]?.layoutParams = halfParams
             daysText[i]?.background = drawable
             daysText[i]?.setAutoSizeTextTypeWithDefaults(AUTO_SIZE_TEXT_TYPE_UNIFORM)
