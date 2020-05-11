@@ -92,7 +92,7 @@ class MyCalendar{
         //今日と授業が同じ曜日
         //今の時間より授業が前の時間なら来週なので7日増やす
         else {
-            if (periodArray[(lecture.period)] < hourMinute)
+            if (periodArray[(lecture.period)] <= hourMinute)
                 calendar.add(Calendar.DAY_OF_MONTH, 7)
         }
         //時間を設定する　登録してある内容をそのまま設定する
