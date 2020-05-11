@@ -20,4 +20,11 @@
         <item name="android:timePickerMode">spinner</item>
     </style>
 
+    <attr name="customAttr" format="reference"/>
+    <style name="CustomStyle1">
+        <item name="android:textColor">#00cc00</item>
+
+    </style>
+
+
 </resources>

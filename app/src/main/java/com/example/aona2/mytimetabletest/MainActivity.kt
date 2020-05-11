@@ -13,6 +13,7 @@ import android.util.TypedValue
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -42,9 +43,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     private val drawable = GradientDrawable()
 
     private val MY_PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 1
-
-    private val MIN_TEXT_SIZE = 10f
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +84,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
         //1列目：時限と時間の表示
         textView = TextView(this)
         textView?.background = drawable
-        textView?.setPadding(10,10,10,10)
         textView?.layoutParams = halfParams
         linearArray[0]?.addView(textView)
         for(i in 0..5) {
@@ -104,10 +101,9 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
             periodNumText[i] = TextView(this)
             periodNumText[i]?.text = (i+1).toString()
-            periodNumText[i]?.textSize = 28.0f
             periodNumText[i]?.gravity = Gravity.CENTER
-            periodNumText[i]?.setPadding(10,10,10,10)
             periodNumText[i]?.layoutParams = params
+            periodNumText[i]?.setAutoSizeTextTypeWithDefaults(AUTO_SIZE_TEXT_TYPE_UNIFORM)
             periodLinear[i]?.addView(periodNumText[i])
 
             periodTimeText[i] = TextView(this)
@@ -117,23 +113,22 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             cal.set(Calendar.MINUTE, time % 100)
             val dateFormat = DateFormat.format("HH:mm", cal)
             periodTimeText[i]?.text = dateFormat
-            periodTimeText[i]?.textSize = 30.0f
             periodTimeText[i]?.gravity = Gravity.CENTER
-            //periodTimeText[i]?.setPadding(10,10,10,10)
             periodTimeText[i]?.layoutParams = halfParams
+            periodTimeText[i]?.setAutoSizeTextTypeWithDefaults(AUTO_SIZE_TEXT_TYPE_UNIFORM)
             periodLinear[i]?.addView(periodTimeText[i])
         }
 
         //1行目:曜日の表示
         val daysString = resources?.getStringArray(R.array.Days)
         for(i in 0..4){
-            daysText[i] = TextView(this)
+            daysText[i] = TextView(this,null, R.attr.customAttr, R.style.CustomStyle1)
             if(daysString != null) daysText[i]?.text = daysString[i]
-            daysText[i]?.textSize = 20.0f
+
             daysText[i]?.gravity = Gravity.CENTER
-            //daysText[i]?.setPadding(10,10,10,10)
             daysText[i]?.layoutParams = halfParams
             daysText[i]?.background = drawable
+            daysText[i]?.setAutoSizeTextTypeWithDefaults(AUTO_SIZE_TEXT_TYPE_UNIFORM)
             linearArray[i+1]?.addView(daysText[i])
         }
 
@@ -158,11 +153,12 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                     colorIndex += 1
                     if(colorIndex == colorList?.size) colorIndex = 0
                 }
-                lecText[j][i]?.textSize = 13.5f
+                lecText[j][i]?.setPadding(10,10,10,10)
+                lecText[j][i]?.setAutoSizeTextTypeWithDefaults(AUTO_SIZE_TEXT_TYPE_UNIFORM)
                 lecText[j][i]?.gravity = Gravity.CENTER
 
                 lecText[j][i]?.background = drawable
-                //lecText[j][i]?.setPadding(10,10,10,10)
+
 
                 lecText[j][i]?.layoutParams = params
                 linearArray[i+1]?.addView(lecText[j][i])
@@ -175,53 +171,6 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
                 }
             }
         }
-
-        for(k in 0..5) {
-            val viewTreeObserver = periodTimeText[k]?.viewTreeObserver
-            viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    Log.d("onGloballLayout", "onGloballLayout")
-                    periodTimeText[k]?.setTextSize(TypedValue.COMPLEX_UNIT_PX, changeTextSize(periodTimeText[k]))
-                    periodTimeText[k]?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
-                }
-            })
-        }
-    }
-
-    private fun changeTextSize(textView: TextView?) : Float{
-        if(textView != null){
-            // TextViewの横幅
-            val textViewWidth = textView.width
-
-            // TextViewのサイズ
-            var textSize = textView.textSize
-
-            val paint = Paint()
-
-            // Paintを使ってTextViewのサイズをセット
-            paint.textSize = textSize
-
-            // Paintを使ってテキストの横幅を測定
-            var textWidth = paint.measureText(textView.text.toString())
-
-            // 横幅が　TextView > テキスト　になるまで実行
-            while (textViewWidth-1.0f < textWidth) {
-
-                // テキストのサイズが最小
-                if (MIN_TEXT_SIZE >= textSize) {
-                    textSize = MIN_TEXT_SIZE
-                    break
-                }
-                // TextViewのサイズを小さくする
-                textSize -= 1.0f
-                paint.textSize = textSize
-
-                // テキストの横幅を更新
-                textWidth = paint.measureText(textView.text.toString())
-            }
-            return textSize
-        }
-        return 0f
     }
 
     override fun onRestart() {
