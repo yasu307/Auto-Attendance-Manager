@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#C62828</color>
     <color name="BLACK">#000000</color>
+    <color name="WHITE">#FFFFFF</color>
+
 
     <array name="color_list">
         <item>#ffbcbc</item>

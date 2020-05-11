@@ -21,11 +21,18 @@
     </style>
 
     <attr name="customAttr" format="reference"/>
-    <style name="CustomStyle1">
-        <item name="android:textColor">#00cc00</item>
+    <style name="TextViewStroke">
+        <item name="android:textColor">@color/BLACK</item>
         <item name="android:gravity">center</item>
-        <item name="android:strokeColor">@color/BLACK</item>
-        <item name="android:strokeWidth">1</item>
+        <item name="android:background">@drawable/textview_drawable</item>
+        <item name="android:autoSizeTextType">uniform</item>
+    </style>
+
+    <style name="TextView">
+        <item name="android:textColor">@color/BLACK</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/WHITE</item>
+        <item name="android:autoSizeTextType">uniform</item>
     </style>
 
 
