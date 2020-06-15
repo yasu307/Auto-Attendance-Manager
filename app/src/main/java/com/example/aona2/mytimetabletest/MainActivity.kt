@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             periodLinear[i]?.layoutParams = params
             periodLinear[i]?.tag = i
             periodLinear[i]?.setOnClickListener {//時限コマをクリックしたときに時限の開始時間を設定するダイアログを表示
-                val timePickerFragment = TimePickerFragment(this, preference, i)
+                val timePickerFragment = TimePickerFragment(this, preference.periodArray, i)
                 timePickerIndex = it.tag.toString().toInt()
                 timePickerFragment.show(supportFragmentManager, "timePicker")
             }
