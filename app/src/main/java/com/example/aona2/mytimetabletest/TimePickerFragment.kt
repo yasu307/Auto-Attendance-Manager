@@ -6,7 +6,8 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import androidx.fragment.app.DialogFragment
 
-
+//MainActivityの時限コマを選択した際に呼び出される
+//時限時間を設定するダイアログを表示する
 class TimePickerFragment(private var listener: TimePickerDialog.OnTimeSetListener,
                          private val preference: Preference,
                          private val index:Int): DialogFragment(){

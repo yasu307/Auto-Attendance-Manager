@@ -4,6 +4,7 @@ import android.app.Application
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
+//Realmの初期化に使用する
 class CustomApplication : Application() {
     override fun onCreate() {
         super.onCreate()

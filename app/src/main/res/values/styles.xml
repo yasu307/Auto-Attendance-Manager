@@ -35,6 +35,11 @@
         <item name="android:autoSizeTextType">uniform</item>
     </style>
 
-
+    <style name="TextViewTrans">
+        <item name="android:textColor">@color/BLACK</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/TRANS</item>
+        <item name="android:autoSizeTextType">uniform</item>
+    </style>
 
 </resources>

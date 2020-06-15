@@ -6,6 +6,7 @@ import io.realm.RealmResults
 import java.util.*
 import kotlin.math.min
 
+//授業の時間などを扱うクラス
 class MyCalendar{
     private val infTime: Long = 1000000000000000
     private val infId = 100
@@ -75,7 +76,9 @@ class MyCalendar{
         nextIndex = tmpIndex
     }
 
-    //ある授業の情報からその授業が次にいつあるかを返す
+    //授業情報から次にその授業が開始する時間を返す
+    //授業情報には授業の曜日と時間のみが保存されているため、現在の時間から次にその授業が開始する時間を計算
+    //する必要がある
     private fun lecToCal(lecture: Lecture, now: Calendar): Calendar {
         val calendar: Calendar = Calendar.getInstance()
 
@@ -117,6 +120,7 @@ class MyCalendar{
         }
     }
 
+    //デバッグ用
     //現在時間からn分後のカレンダーをセットする
     fun minAfter(minutes: Int){
         val calendar: Calendar = Calendar.getInstance()
@@ -124,13 +128,12 @@ class MyCalendar{
         nextCalendar = calendar
     }
 
-    //実際に使用する
+    //day(MainActivityのsetView()で作成したコマに対応する曜日の数値)をyoubi(calendarクラスでの曜日の数値)に変換する
     fun dayToYoubi(day: Int): Int{
         val youbi = day + 2
         if(youbi == 8) return 1
         else return youbi
     }
-
 
 /*
        //土曜日日曜日にデバッグしたいときに使う

@@ -3,6 +3,7 @@ package com.example.aona2.mytimetabletest
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
+//Realmのモデルクラス
 open class Lecture : RealmObject(){
     @PrimaryKey
     var id: Int = 0

@@ -16,6 +16,7 @@ import com.google.android.gms.location.LocationServices
 import io.realm.Realm
 import io.realm.RealmResults
 
+//位置情報から出欠を確認し、realmに保存してある授業情報を更新する
 class AttendService : Service(){
     private lateinit var preference: Preference
 
@@ -27,7 +28,7 @@ class AttendService : Service(){
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("onstart", "onstart")
 
-        val channelId = "com.codechacha.sample1"
+        val channelId = "channelId"
         val channelName = "My service channel"
         if (Build.VERSION.SDK_INT >= 26) {
             val channel = NotificationChannel(
@@ -64,37 +65,40 @@ class AttendService : Service(){
             if(index != null) {
                 val lecture = rResults[index]
                 if (lecture != null) {
-                    incrementLec(lecture)
-                    checkAttend(lecture)
+                    incrementLec(lecture) //現在の授業の授業回数を１増やす
+                    checkAttend(lecture)  //出欠を確認する
                 }
             }
         }
+        //次の授業の時間にアラームをセットする
         if(index != null) setAlarm(index)
 
+        //終わったら終了する
         stopSelf()
 
         return super.onStartCommand(intent, flags, startId)
     }
 
-
-
+    //位置情報から出欠を確認する
     private fun checkAttend(lecture: Lecture){
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location : Location? ->
-                // Got last known location. In some rare situations this can be null.
                 Log.d("lastlocation", location?.latitude.toString())
                 Log.d("lastlocation", location?.longitude.toString())
 
+                //現在の位置を取得
                 val lastlat : Double? = location?.latitude
                 val lastlng : Double? = location?.longitude
 
-                val lat: Double? = preference.schLocation.first?.toDouble()
-                val lng: Double? = preference.schLocation.second?.toDouble()
+                //学校の場所を取得
+                val schoolLat: Double? = preference.schLocation.first?.toDouble()
+                val schoolLng: Double? = preference.schLocation.second?.toDouble()
 
-                if(lastlat != null && lastlng != null && lat != null && lng != null ){
-                    val distance = getDistance(lat, lng, lastlat, lastlng)
+                //現在位置と学校の位置の距離を計算しrealmを更新する
+                if(lastlat != null && lastlng != null && schoolLat != null && schoolLng != null ){
+                    val distance = getDistance(schoolLat, schoolLng, lastlat, lastlng)
                     Log.d("distance", distance.toString())
                     if(distance < limitDistance){
                         incrementAttend(lecture)
@@ -109,12 +113,13 @@ class AttendService : Service(){
             }
     }
 
-    //アラームをセットする
+    //次のアラームをセットする
     private fun setAlarm(index: Int){
         val alarm = Alarm(preference.periodArray, index, this)
         //alarm.minAfter(1)
     }
 
+    //授業の時間になったら呼び出される
     //lectureNumに1を足す
     private fun incrementLec(lecture: Lecture){
          realm.executeTransaction {
@@ -123,6 +128,7 @@ class AttendService : Service(){
          }
     }
 
+    //出席をしたときに呼び出す
     //attendに1を足す
     private fun incrementAttend(lecture: Lecture){
         realm.executeTransaction {
