@@ -93,8 +93,8 @@ class AttendService : Service(){
                 val lastlng : Double? = location?.longitude
 
                 //学校の場所を取得
-                val schoolLat: Double? = preference.schLocation.first?.toDouble()
-                val schoolLng: Double? = preference.schLocation.second?.toDouble()
+                val schoolLat: Double? = preference.getSchLocation().first?.toDouble()
+                val schoolLng: Double? = preference.getSchLocation().second?.toDouble()
 
                 //現在位置と学校の位置の距離を計算しrealmを更新する
                 if(lastlat != null && lastlng != null && schoolLat != null && schoolLng != null ){
@@ -115,7 +115,7 @@ class AttendService : Service(){
 
     //次のアラームをセットする
     private fun setAlarm(index: Int){
-        val alarm = Alarm(preference.periodArray, index, this)
+        val alarm = Alarm(preference.getPeriodArray(), index, this)
         //alarm.minAfter(1)
     }
 

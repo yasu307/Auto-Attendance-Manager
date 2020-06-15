@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             periodLinear[i]?.layoutParams = params
             periodLinear[i]?.tag = i
             periodLinear[i]?.setOnClickListener {//時限コマをクリックしたときに時限の開始時間を設定するダイアログを表示
-                val timePickerFragment = TimePickerFragment(this, preference.periodArray, i)
+                val timePickerFragment = TimePickerFragment(this, preference.getPeriodArray(), i)
                 timePickerIndex = it.tag.toString().toInt()
                 timePickerFragment.show(supportFragmentManager, "timePicker")
             }
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
             periodLinear[i]?.addView(periodNumText[i])
             //時限の開始時間
             periodTimeText[i] = TextView(ContextThemeWrapper(this, R.style.TextViewTrans))
-            val time = preference.periodArray[i]
+            val time = preference.getPeriodArray()[i]
             val cal = Calendar.getInstance()
             cal.set(Calendar.HOUR_OF_DAY, time / 100)
             cal.set(Calendar.MINUTE, time % 100)
@@ -168,13 +168,13 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
     //isAlarmを確認しtrueならsetAlarm()を実行
     private fun checkAlarm(){
-        if(preference.isAlarm != false)
+        if(preference.getIsAlarm())
             if(CheckPermission(this).checkPermission()) setAlarm()
     }
 
     //アラームをセットする
     private fun setAlarm(){
-        alarm = Alarm(preference.periodArray, this)
+        alarm = Alarm(preference.getPeriodArray(), this)
         //デバッグ用　n分後にアラームを設定する
         //alarm.minAfter(1)
         Toast.makeText(applicationContext, "出席管理をセットしました", Toast.LENGTH_SHORT).show()
@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     //アラームの状態によってアイコンを変更する
     private fun setAlarmMenu(menu: Menu?){
         val item = menu?.getItem(0)
-        if(preference.isAlarm != false) {
+        if(preference.getIsAlarm()) {
             item?.title = "アラームを解除する"
             item?.icon = ResourcesCompat.getDrawable(resources, android.R.drawable.ic_lock_idle_alarm, null)
         }
@@ -240,12 +240,12 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.alarmMenu -> {//アラームメニューが選択されたとき
-                if(preference.isAlarm != false){
-                    preference.putIsAlarm(false)
+                if(preference.getIsAlarm()){
+                    preference.setIsAlarm(false)
                     cancelAlarm()
                     invalidateOptionsMenu()
                 }else{
-                    preference.putIsAlarm(true)
+                    preference.setIsAlarm(true)
                     setAlarm()
                     invalidateOptionsMenu()
                 }
@@ -282,7 +282,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
     //時限の時間を変更した場合に呼び出される
     override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
         if(timePickerIndex != -1){
-            preference.putPeriod(timePickerIndex, hourOfDay, minute)
+            preference.setPeriod(timePickerIndex, hourOfDay, minute)
             updatePeriodText(timePickerIndex)
             checkAlarm()
         }
@@ -290,7 +290,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
     //時限の時間表示を変更する
     private fun updatePeriodText(index:Int){
-        val time = preference.periodArray[index]
+        val time = preference.getPeriodArray()[index]
         val cal = Calendar.getInstance()
         cal.set(Calendar.HOUR_OF_DAY, time / 100)
         cal.set(Calendar.MINUTE, time % 100)

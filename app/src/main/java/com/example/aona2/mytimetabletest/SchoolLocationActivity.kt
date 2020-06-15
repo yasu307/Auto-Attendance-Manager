@@ -19,7 +19,7 @@ class SchoolLocationActivity : AppCompatActivity() {
         preference = Preference(pref)
 
         //現在保存してある学校位置を共有プリファレンスから取得する
-        val location = preference.schLocation
+        val location = preference.getSchLocation()
         //TextViewに現在の学校位置を入力
         latEdit.setText(location.first.toString())
         lngEdit.setText(location.second.toString())
@@ -29,7 +29,7 @@ class SchoolLocationActivity : AppCompatActivity() {
             if(latEdit.text.isNullOrEmpty() || lngEdit.text.isNullOrEmpty())//どちらかが入力されていない場合
                 Toast.makeText(applicationContext, "正しく入力してください", Toast.LENGTH_SHORT).show()
             else{
-                preference.putLocation(Pair(latEdit.text.toString(), lngEdit.text.toString()))
+                preference.setSchLocation(Pair(latEdit.text.toString(), lngEdit.text.toString()))
                 Toast.makeText(applicationContext, "保存しました", Toast.LENGTH_SHORT).show()
                 finish()
             }

@@ -6,9 +6,6 @@ import android.content.SharedPreferences
 //フィールドの値を他のクラスから使用される
 class Preference(private val pref: SharedPreferences) {
     private val periodNum = 6
-    var periodArray = Array(periodNum) {0}
-    var schLocation: Pair<String?, String?>  = Pair(null, null)
-    var isAlarm: Boolean? = null
 
     private var editor: SharedPreferences.Editor = pref.edit()
 
@@ -28,22 +25,29 @@ class Preference(private val pref: SharedPreferences) {
     private val defaultPeriod5 = 1615
     private val defaultPeriod6 = 1800
 
-    //初期値を共有プリファレンスに保存し, フィールドに値を持つ
-    //初めて起動した場合に呼び出される
-    init {
-        if(isDefault()) putDefaultPref()
-        setLocation()
-        setPeriod()
-        setIsAlarm()
+    //学校の位置を返す
+    fun getSchLocation():Pair<String?, String?>{
+        return Pair(pref.getString("lat", defaultLat.toString()),pref.getString("lng", defaultLat.toString()))
     }
 
-    //初めて起動したかどうか判別
-    private fun isDefault(): Boolean{
-        return pref.getBoolean("isDefault", true)
+    //時限の時間を返す
+    fun getPeriodArray():Array<Int>{
+        return arrayOf(pref.getInt("period1", defaultPeriod1),
+            pref.getInt("period2", defaultPeriod2),
+            pref.getInt("period3", defaultPeriod3),
+            pref.getInt("period4", defaultPeriod4),
+            pref.getInt("period5", defaultPeriod5),
+            pref.getInt("period6", defaultPeriod6)
+        )
+    }
+
+    //アラームがセットしてあるかを返す
+    fun getIsAlarm():Boolean{
+        return pref.getBoolean("isAlarm", true)
     }
 
     //共有プリファレンスに初期値を保存
-    private fun putDefaultPref() {
+    private fun setDefaultPref() {
         editor.putInt("period1", defaultPeriod1)
             .putInt("period2", defaultPeriod2)
             .putInt("period3", defaultPeriod3)
@@ -52,12 +56,11 @@ class Preference(private val pref: SharedPreferences) {
             .putInt("period6", defaultPeriod6)
             .putString("lat", defaultLat.toString())
             .putString("lng", defaultLng.toString())
-            .putBoolean("isDefault", false)
             .putBoolean("isAlarm", true)
             .apply()
     }
 
-    //時限の時間に初期値を保存する
+    //時限開始時間を初期化する
     fun periodInit(){
         editor.putInt("period1", defaultPeriod1)
             .putInt("period2", defaultPeriod2)
@@ -66,58 +69,32 @@ class Preference(private val pref: SharedPreferences) {
             .putInt("period5", defaultPeriod5)
             .putInt("period6", defaultPeriod6)
             .apply()
-        setPeriod()
-    }
-
-    //学校の位置に初期値を保存する
-    fun locationInit(){
-        editor.putString("lat", defaultLat.toString())
-            .putString("lng", defaultLng.toString())
-            .apply()
-        setLocation()
     }
 
     //引数の値を学校の位置として保存する
-    fun putLocation(location:Pair<String, String>){
+    fun setSchLocation(location:Pair<String, String>){
         editor.putString("lat", location.first)
             .putString("lng", location.second)
             .apply()
-        setLocation()
     }
 
     //引数の値を時限の時間として保存する
-    fun putPeriod(periodIndex: Int, hour: Int, minute: Int){
+    fun setPeriod(periodIndex: Int, hour: Int, minute: Int){
         val time = hour * 100 + minute
         val periodString = "period" + (periodIndex+1).toString()
         editor.putInt(periodString, time)
             .apply()
-        setPeriod()
     }
 
-    //引数の値をアラームセットとして保存する
-    fun putIsAlarm(IsAlarm: Boolean){
-        isAlarm = IsAlarm
+    //引数の値をアラームがセットしてあるかの変数として返す
+    fun setIsAlarm(IsAlarm: Boolean){
         editor.putBoolean("isAlarm", IsAlarm)
             .apply()
     }
 
-    //共有プリファレンスに保存されている学校の場所の値をフィールドに保持する
-    private fun setLocation() {
-        val lat = pref.getString("lat", "0")
-        val lng = pref.getString("lng", "0")
-        schLocation = Pair(lat, lng)
-    }
-
-    //共有プリファレンスに保存されている時限時間の値をフィールドに保持する
-    private fun setPeriod(){
-        for(i in 0 until periodNum){
-            val string = "period" + (i+1).toString()
-            periodArray[i] = pref.getInt(string, 0)
-        }
-    }
-
-    //共有プリファレンスに保存されているアラームセットの値をフィールドに保持する
-    private fun setIsAlarm(){
-        isAlarm = pref.getBoolean("isAlarm", true)
+    //共有プリファレンスを削除する
+    //デバッグ用
+    fun clearPref(){
+        editor.clear().commit()
     }
 }
