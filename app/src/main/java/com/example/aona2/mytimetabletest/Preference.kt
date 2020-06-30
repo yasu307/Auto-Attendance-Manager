@@ -27,7 +27,7 @@ class Preference(private val pref: SharedPreferences) {
 
     //学校の位置を返す
     fun getSchLocation():Pair<String?, String?>{
-        return Pair(pref.getString("lat", defaultLat.toString()),pref.getString("lng", defaultLat.toString()))
+        return Pair(pref.getString("lat", defaultLat.toString()),pref.getString("lng", defaultLng.toString()))
     }
 
     //時限の時間を返す
