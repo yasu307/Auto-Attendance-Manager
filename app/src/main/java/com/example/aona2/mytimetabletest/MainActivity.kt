@@ -10,7 +10,6 @@ import android.text.format.DateFormat
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity

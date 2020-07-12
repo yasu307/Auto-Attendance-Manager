@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_lec_edit.*
 //授業コマをタップすると呼び出される
 //授業をrealmに保存する
 class LecEditActivity : AppCompatActivity() {
+    //test
     private lateinit var realm: Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
