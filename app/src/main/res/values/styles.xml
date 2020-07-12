@@ -15,12 +15,12 @@
         <item name="android:timePickerStyle">@style/TimePicker</item>
     </style>
 
-    <style name="TimePicker"
-        parent="@android:style/Widget.Material.Light.TimePicker">
+    <style name="TimePicker" parent="@android:style/Widget.Material.Light.TimePicker">
         <item name="android:timePickerMode">spinner</item>
     </style>
 
-    <attr name="customAttr" format="reference"/>
+    <attr name="customAttr" format="reference" />
+
     <style name="TextViewStroke">
         <item name="android:textColor">@color/BLACK</item>
         <item name="android:gravity">center</item>
@@ -41,5 +41,14 @@
         <item name="android:background">@color/TRANS</item>
         <item name="android:autoSizeTextType">uniform</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

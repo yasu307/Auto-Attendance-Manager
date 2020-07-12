@@ -115,7 +115,7 @@ class AttendService : Service(){
 
     //次のアラームをセットする
     private fun setAlarm(index: Int){
-        val alarm = Alarm(preference.getPeriodArray(), index, this)
+        Alarm(preference.getPeriodArray(), index, this)
         //alarm.minAfter(1)
     }
 

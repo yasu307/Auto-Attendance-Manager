@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity(), TimePickerDialog.OnTimeSetListener{
 
                 //授業コマをクリックした場合の処理
                 lecText[j][i]?.setOnClickListener{
-                    val intent = Intent(it.context, LecEditActivity::class.java)
+                    val intent = Intent(it.context, LecEditActivity2::class.java)
                     intent.putExtra("period", j)
                     intent.putExtra("day", i)
                     startActivity(intent)
